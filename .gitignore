@@ -56,6 +56,8 @@ backend/__pycache__/**
 !.vscode/extensions.json
 .history/*
 
+# Secrets file
+secrets.js
 
 # Miscellaneous
 /.angular
