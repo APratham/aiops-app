@@ -1,14 +1,37 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { HomePage } from './home/home.page';
+import { LoginComponent } from './login/login.component';
+import { LogoutComponent } from './logout/logout.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { AuthGuard } from './auth.guard';  // Import the AuthGuard
 
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    component: HomePage
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard]  // Protect the dashboard route with the AuthGuard
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',  // Redirect to the login page if no path is provided
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'login',  // Fallback route redirects to login for undefined routes
     pathMatch: 'full'
   },
 ];
