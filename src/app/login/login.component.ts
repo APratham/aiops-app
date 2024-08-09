@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IpcRendererEvent } from 'electron'; // Importing the IpcRendererEvent type
 
 @Component({
@@ -10,7 +11,7 @@ export class LoginComponent implements OnInit {
 
   ipcRenderer = (window as any).electron.ipcRenderer;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     const googleLoginButton = document.querySelector('ion-button#google-login');
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit {
 
     this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
       const { uniqueId } = data;
-      window.location.href = `index.html?uniqueId=${uniqueId}`;
+      console.log('Login successful, uniqueId:', uniqueId);
+      this.router.navigate(['/dashboard']);  // Redirect using Angular's router
     });
 
     this.ipcRenderer.on('auth-window-closed', () => {
@@ -37,7 +39,7 @@ export class LoginComponent implements OnInit {
     });
 
     this.ipcRenderer.on('logout-success', () => {
-      window.location.href = 'login.html';
+      this.router.navigate(['/login']);  // Redirect to the login page using Angular's router
     });
   }
 }

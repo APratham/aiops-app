@@ -6,12 +6,20 @@ import { IpcRendererEvent } from 'electron';
 })
 export class AuthService {
 
-  ipcRenderer = (window as any).electron.ipcRenderer;
+  private ipcRenderer = (window as any).electron?.ipcRenderer;
 
-  constructor() {}
+  constructor() {
+    if (!this.ipcRenderer) {
+      console.warn('ipcRenderer is not available. Make sure you are running inside Electron.');
+    }
+  }
 
   isLoggedIn(): Promise<boolean> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      if (!this.ipcRenderer) {
+        reject('ipcRenderer is not initialized');
+        return;
+      }
       this.ipcRenderer.once('auth-status', (event: IpcRendererEvent, isLoggedIn: boolean) => {
         resolve(isLoggedIn);
       });
@@ -20,16 +28,28 @@ export class AuthService {
   }
 
   startLogin(provider: 'google' | 'microsoft'): void {
-    this.ipcRenderer.send('auth-start', provider);
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('auth-start', provider);
+    } else {
+      console.error('ipcRenderer is not initialized');
+    }
   }
 
   onLoginSuccess(callback: (data: { tokens: any, uniqueId: string }) => void): void {
-    this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
-      callback(data);
-    });
+    if (this.ipcRenderer) {
+      this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
+        callback(data);
+      });
+    } else {
+      console.error('ipcRenderer is not initialized');
+    }
   }
 
   logout(): void {
-    this.ipcRenderer.send('logout');
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('logout');
+    } else {
+      console.error('ipcRenderer is not initialized');
+    }
   }
 }

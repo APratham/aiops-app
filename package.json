@@ -59,6 +59,7 @@
     "@capacitor/cli": "6.0.0",
     "@electron/packager": "^18.3.2",
     "@ionic/angular-toolkit": "^11.0.1",
+    "@types/electron": "^1.4.38",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
