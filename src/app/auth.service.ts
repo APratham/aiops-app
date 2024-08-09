@@ -19,6 +19,16 @@ export class AuthService {
     });
   }
 
+  startLogin(provider: 'google' | 'microsoft'): void {
+    this.ipcRenderer.send('auth-start', provider);
+  }
+
+  onLoginSuccess(callback: (data: { tokens: any, uniqueId: string }) => void): void {
+    this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
+      callback(data);
+    });
+  }
+
   logout(): void {
     this.ipcRenderer.send('logout');
   }

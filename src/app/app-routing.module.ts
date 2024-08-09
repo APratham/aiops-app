@@ -8,10 +8,6 @@ import { AuthGuard } from './auth.guard';  // Import the AuthGuard
 
 const routes: Routes = [
   {
-    path: 'home',
-    component: HomePage
-  },
-  {
     path: 'login',
     component: LoginComponent
   },
