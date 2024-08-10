@@ -34,6 +34,10 @@ app.on('ready', async () => {
     }
   });
 
+  ipcMain.on('update-title', (event, title) => {
+    mainWindow.setTitle(title);
+  });
+
   splashWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -290,6 +294,7 @@ const validateGoogleToken = async (tokens) => {
       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
     });
     console.log('User Info:', res.data); // Log the user info to verify
+    mainWindow.webContents.send('user-info', res.data);
     return true;
   } catch (error) {
     console.error('Token validation failed:', error);
@@ -315,6 +320,7 @@ const validateMsToken = async (accessToken) => {
 
     const userInfo = await response.json();
     console.log('User Info:', userInfo); // Log the user info to verify
+    mainWindow.webContents.send('user-info', res.data);
     return true;
   } catch (error) {
     console.error('Token validation error:', error);

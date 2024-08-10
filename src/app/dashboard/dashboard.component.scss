@@ -5,14 +5,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: auto;
-    width: auto;
-    transform: translate(0%, 50%);
-    background-color: rgba(255, 255, 255, 0.8);
+    height: calc(100vh - 96px);  /* Adjusted height calculation (56px for top bar + 40px for margin) */
+    width: calc(100vw - 20px);   /* Reduced side margins to make the container wider */
+    background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease;
-    margin: auto;
-    max-width: 80%;
+    margin: 56px auto 20px auto;  /* Top margin is equal to the top bar's height, 20px at the bottom */
+    max-width: 95%;     /* Increased max-width to make the container occupy more horizontal space */
+    max-height: 90%;    /* Ensure it doesn't cover too much of the viewport height */
 }

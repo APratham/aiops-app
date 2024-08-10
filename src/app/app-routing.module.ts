@@ -8,15 +8,17 @@ import { AuthGuard } from './auth.guard';  // Import the AuthGuard
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    data: { title: 'Login' }  // Set the title for the login page
   },
   {
     path: 'logout',
-    component: LogoutComponent
+    component: LogoutComponent,  // Set the title for the logout page
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    data: { title: 'Dashboard' },
     canActivate: [AuthGuard]  // Protect the dashboard route with the AuthGuard
   },
   {
