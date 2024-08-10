@@ -1,0 +1,32 @@
+ion-header {
+    display: block;
+    height: 56px;/* Standard height for headers in Ionic */
+    position: fixed;
+    box-shadow: none; /* Remove the default box shadow */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+  
+  ion-toolbar {
+    height: 100%; /* Make sure the toolbar fills the header */
+    display: flex;
+    align-items: center;
+    box-shadow: none !important; /* Remove the default box shadow */
+    --background: transparent;
+  }
+  
+  ion-title {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 20px; /* Adjust size as needed */
+    color: black;
+  }
+  
+  .logo {
+    height: 56px;
+    width: auto;
+  }
+  

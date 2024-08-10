@@ -9,13 +9,14 @@ import { RouteReuseStrategy } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { HomePage } from './home/home.page';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+import { TopBarComponent } from './topbar/topbar.component';
+
 @NgModule({
-  declarations: [AppComponent, HomePage, LoginComponent, LogoutComponent, DashboardComponent],
+  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
