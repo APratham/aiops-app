@@ -35,8 +35,8 @@ app.on('ready', async () => {
   });
 
   splashWindow = new BrowserWindow({
-    width: 400,
-    height: 300,
+    width: 800,
+    height: 600,
     frame: false,
     alwaysOnTop: true,
     webPreferences: {
@@ -50,12 +50,13 @@ app.on('ready', async () => {
   setTimeout(async () => {
     await createMainWindow();
     splashWindow.close();
-  }, 3000); // Show splash screen for 3 seconds
+  }, 5000); // Show splash screen for 5 seconds
 });
 
 async function createMainWindow() {
   mainWindow = new BrowserWindow({
-    title: 'Electron OAuth Example',
+    width: 1200,
+    height: 800,
     webPreferences: { 
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
