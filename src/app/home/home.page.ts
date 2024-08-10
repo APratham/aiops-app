@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastController } from '@ionic/angular';
+//import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+//import { ipcRenderer } from 'electron';
 
 // Define a response type that matches what you expect from your backend
 interface ApiResponse {

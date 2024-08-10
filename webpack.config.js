@@ -3,21 +3,14 @@ const path = require('path');
 module.exports = {
   resolve: {
     fallback: {
-      "fs": require.resolve("fs-browserify"),
-      "path": require.resolve("path-browserify"),
+      "fs": false,            // Do not include the 'fs' module
+      "path": false,          // Do not include the 'path' module
+      "crypto": false,        // You can add more fallbacks if necessary
+      "net": false,           // Optional: If 'net' is being used
+      "tls": false,           // Optional: If 'tls' is being used
     }
   },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
-      }
-    ]
-  },
-  output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'dist')
+  externals: {
+    electron: 'electron'      // Prevent 'electron' from being bundled
   }
 };
