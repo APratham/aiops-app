@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 import { UserInfoService } from '../user-info.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class TopBarComponent implements OnInit {
   profilePic: string = 'assets/profile/avatar.jpg';
   userInfo: any = null;
 
-  constructor(private userInfoService: UserInfoService) {}
+  constructor(private userInfoService: UserInfoService, private menu: MenuController) {}
 
   ngOnInit() {
     this.userInfo = this.userInfoService.getUserInfo();
@@ -36,5 +37,9 @@ export class TopBarComponent implements OnInit {
 
   isAuthenticated(): boolean {
     return this.userInfo !== null;
+  }
+
+  openMenu() {
+    this.menu.open('profileMenu');
   }
 }

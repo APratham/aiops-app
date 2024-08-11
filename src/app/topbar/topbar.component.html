@@ -1,11 +1,37 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start" *ngIf="isAuthenticated()">
-      <img src="{{ logo }}" alt="Logo" class="logo" />
+    <ion-buttons slot="start">
+      <img src="{{ logo }}" alt="Logo" class="logo" *ngIf="isAuthenticated()" />
     </ion-buttons>
-    <ion-title>{{ title }}</ion-title>
+    <ion-title *ngIf="isAuthenticated()">{{ title }}</ion-title>
     <ion-buttons slot="end" *ngIf="isAuthenticated()">
-      <img src="{{ profilePic }}" alt="Profile Picture" class="profile-pic" />
+      <ion-button (click)="openMenu()">
+        <img src="{{ profilePic }}" alt="Profile Picture" class="profile-pic" />
+      </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
+
+
+
+<!-- Add the Ion Menu here -->
+<ion-menu side="end" menuId="profileMenu" contentId="main-content">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Profile Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item routerLink="/profile">Profile</ion-item>
+      <ion-item routerLink="/settings">Settings</ion-item>
+      <ion-item routerLink="/logout">Logout</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<!-- Your main content area -->
+<ion-content id="main-content">
+  <!-- The rest of your page content goes here -->
+</ion-content>
