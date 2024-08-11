@@ -1,3 +1,14 @@
+//                              __
+//    ____     ____          __/ /_ __        __
+//   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
+//  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
+// /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
+//
+// Antariksh Pratham, N1191635
+// Major Project appplication
+// Masters in Cloud Computing, Nottingham Trent University
+
+
 const { app, BrowserWindow, ipcMain, protocol } = require('electron');
 const { OAuth2Client } = require('google-auth-library');
 const { GOOGLE_OAUTH_CLIENT, MICROSOFT_OAUTH_CLIENT } = require('./secrets');
@@ -8,18 +19,20 @@ const fetch = require('node-fetch');
 const URL = require('url').URL;
 const path = require('path');
 
+const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
+
 const SERVICE_NAME = 'ElectronOAuthExample';
 const GOOGLE_ACCOUNT_NAME = 'google-oauth-token';
 const GOOGLE_UNIQUE_ID_KEY = 'google-unique-id';
 const MS_ACCOUNT_NAME = 'ms-oauth-token';
 const MS_UNIQUE_ID_KEY = 'ms-unique-id';
 
+// Store the base URL in a variable
+const BASE_URL = 'http://localhost:3000';
+
 let mainWindow;
 let authWindow;
 let splashWindow;
-
-// Store the base URL in a variable
-const BASE_URL = 'http://localhost:3000';
 
 app.on('ready', async () => {
   protocol.registerHttpProtocol('msal', (request, callback) => {
@@ -294,6 +307,11 @@ const validateGoogleToken = async (tokens) => {
       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
     });
     console.log('User Info:', res.data); // Log the user info to verify
+
+    // Store user info in MongoDB and cache in SQLite
+    await storeUserInfo(res.data);
+    cacheUserInfo(res.data);
+
     mainWindow.webContents.send('user-info', res.data);
     return true;
   } catch (error) {
@@ -320,7 +338,12 @@ const validateMsToken = async (accessToken) => {
 
     const userInfo = await response.json();
     console.log('User Info:', userInfo); // Log the user info to verify
-    mainWindow.webContents.send('user-info', res.data);
+
+    // Store user info in MongoDB and cache in SQLite
+    await storeUserInfo(userInfo);
+    cacheUserInfo(userInfo);
+
+    mainWindow.webContents.send('user-info', userInfo);
     return true;
   } catch (error) {
     console.error('Token validation error:', error);

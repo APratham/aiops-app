@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
+const dalRoutes = require('./data-layer/expressDal'); // Import DAL routes
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -13,6 +15,8 @@ app.use('/api', createProxyMiddleware({
   target: 'http://localhost:8000', // FastAPI backend URL
   changeOrigin: true,
 }));
+
+app.use('/dal', dalRoutes); // All DAL-related routes are prefixed with /dal
 
 // Catch-all route to serve the Angular app
 app.get('*', (req, res) => {
