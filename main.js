@@ -15,11 +15,13 @@ const { GOOGLE_OAUTH_CLIENT, MICROSOFT_OAUTH_CLIENT } = require('./secrets');
 const msal = require('@azure/msal-node');
 const crypto = require('crypto');
 const keytar = require('keytar');
+const Store = require('electron-store');
 const fetch = require('node-fetch');
 const URL = require('url').URL;
 const path = require('path');
 
 const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
+const dal = require('./data-layer/dal');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
 const GOOGLE_ACCOUNT_NAME = 'google-oauth-token';
@@ -29,10 +31,26 @@ const MS_UNIQUE_ID_KEY = 'ms-unique-id';
 
 // Store the base URL in a variable
 const BASE_URL = 'http://localhost:3000';
+const store = new Store();
 
 let mainWindow;
 let authWindow;
 let splashWindow;
+
+ipcMain.on('get-user-info', (event) => {
+  const userInfo = store.get('userInfo', null);
+  event.returnValue = userInfo; // Send the stored user info back to Angular
+});
+
+ipcMain.on('save-user-info', (event, userInfo) => {
+  store.set('userInfo', userInfo);
+  event.returnValue = true; // Confirm the data was saved successfully
+});
+
+ipcMain.on('get-profile-pic', (event) => {
+  const profilePic = dal.getProfilePicFromStore();
+  event.returnValue = profilePic;
+});
 
 app.on('ready', async () => {
   protocol.registerHttpProtocol('msal', (request, callback) => {
@@ -302,23 +320,28 @@ const handleURLChange = (url, interactionWindow, resolve, reject, onclosed) => {
 const validateGoogleToken = async (tokens) => {
   const client = new OAuth2Client();
   client.setCredentials(tokens);
+
   try {
     const res = await client.request({
       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
     });
-    console.log('User Info:', res.data); // Log the user info to verify
+    const userInfo = res.data;
+    console.log('User Info:', userInfo);
 
-    // Store user info in MongoDB and cache in SQLite
-    await storeUserInfo(res.data);
-    cacheUserInfo(res.data);
+    // Cache user info which will also save profile picture in Electron Store
+    await cacheUserInfo(userInfo);
 
-    mainWindow.webContents.send('user-info', res.data);
+    // Send user info to Angular frontend
+    mainWindow.webContents.send('user-info', userInfo);
+
     return true;
   } catch (error) {
     console.error('Token validation failed:', error);
     return false;
   }
 };
+
+
 
 const validateMsToken = async (accessToken) => {
   const url = "https://graph.microsoft.com/v1.0/me";

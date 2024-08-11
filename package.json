@@ -41,6 +41,7 @@
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "electron": "^31.3.1",
+    "electron-store": "^8.2.0",
     "express": "^4.19.2",
     "google-auth-library": "^9.13.0",
     "http-proxy-middleware": "^3.0.0",

@@ -5,6 +5,8 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
+const Store = require('electron-store');
+const store = new Store();
 
 
 const uri = process.env.MONGODB_URI;
@@ -106,38 +108,46 @@ function ensureDirectoryExists(directory) {
 
 // Cache user info in SQLite and optionally in MongoDB
 async function cacheUserInfo(userInfo, shouldSaveToMongoDB = false) {
-  const userInSQLite = await getCachedUserInfo(userInfo.sub);
-
-  if (userInSQLite) {
-    console.log('User already exists in the database.');
-  } else {
-    try {
-      // Download the profile picture
-      const picturePath = await downloadProfilePicture(userInfo.picture, userInfo.sub);
-
-      sqliteDb.serialize(() => {
-        const stmt = sqliteDb.prepare(`
-          INSERT INTO user_info (sub, name, given_name, family_name, picture)
-          VALUES (?, ?, ?, ?, ?)
-        `);
-        stmt.run(userInfo.sub, userInfo.name, userInfo.given_name, userInfo.family_name, picturePath, (err) => {
-          if (err) {
-            console.error('Error caching user info in SQLite:', err.message);
-          } else {
-            console.log('User info cached in SQLite');
-          }
+    const userInSQLite = await getCachedUserInfo(userInfo.sub);
+  
+    if (userInSQLite) {
+      console.log('User already exists in the database.');
+    } else {
+      try {
+        // Download the profile picture
+        const picturePath = await downloadProfilePicture(userInfo.picture, userInfo.sub);
+  
+        // Save to Electron Store
+        store.set('profilePic', picturePath);
+  
+        sqliteDb.serialize(() => {
+          const stmt = sqliteDb.prepare(`
+            INSERT INTO user_info (sub, name, given_name, family_name, picture)
+            VALUES (?, ?, ?, ?, ?)
+          `);
+          stmt.run(userInfo.sub, userInfo.name, userInfo.given_name, userInfo.family_name, picturePath, (err) => {
+            if (err) {
+              console.error('Error caching user info in SQLite:', err.message);
+            } else {
+              console.log('User info cached in SQLite');
+            }
+          });
+          stmt.finalize();
         });
-        stmt.finalize();
-      });
-
-      if (shouldSaveToMongoDB) {
-        await storeUserInfo(userInfo);
+  
+        if (shouldSaveToMongoDB) {
+          await storeUserInfo(userInfo);
+        }
+      } catch (error) {
+        console.error('Error in caching user info:', error);
       }
-    } catch (error) {
-      console.error('Error in caching user info:', error);
     }
   }
-}
+  
+  // Retrieve cached profile picture from Electron Store
+  function getProfilePicFromStore() {
+    return store.get('profilePic', 'assets/profile/avatar.jpg'); // Default avatar if not found
+  }
 
 async function storeUserInfo(userInfo, retries = 5) {
     if (mongoose.connection.readyState !== 1) { // 1 means connected
@@ -216,4 +226,6 @@ module.exports = {
   storeUserInfo,
   cacheUserInfo,
   getCachedUserInfo,
+  getCachedUserInfo,
+  getProfilePicFromStore,
 };
