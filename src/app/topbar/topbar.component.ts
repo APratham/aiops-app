@@ -9,14 +9,16 @@ import { UserInfoService } from '../user-info.service';
 export class TopBarComponent implements OnInit {
   @Input() title: string = 'Default Title';
   @Input() logo: string = '/assets/logo.svg';
-  profilePic: string = 'assets/profile/empty.png';
+  profilePic: string = 'assets/profile/avatar.jpg';
+  userInfo: any = null;
 
   constructor(private userInfoService: UserInfoService) {}
 
   ngOnInit() {
-    const userInfo = this.userInfoService.getUserInfo();
-    if (userInfo && userInfo.picture) {
-      this.profilePic = userInfo.picture;
+    this.userInfo = this.userInfoService.getUserInfo();
+
+    if (this.userInfo && this.userInfo.picture) {
+      this.profilePic = this.userInfo.picture;
     } else if (window.electron && window.electron.ipcRenderer) {
       this.profilePic = window.electron.ipcRenderer.sendSync('get-profile-pic') as string;
     }
@@ -25,9 +27,14 @@ export class TopBarComponent implements OnInit {
       window.electron.ipcRenderer.on('user-info', (event, userInfo) => {
         if (userInfo && userInfo.picture) {
           this.profilePic = userInfo.picture;
+          this.userInfo = userInfo;
           this.userInfoService.saveUserInfo(userInfo);
         }
       });
     }
+  }
+
+  isAuthenticated(): boolean {
+    return this.userInfo !== null;
   }
 }

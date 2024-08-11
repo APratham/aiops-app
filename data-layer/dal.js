@@ -146,7 +146,7 @@ async function cacheUserInfo(userInfo, shouldSaveToMongoDB = false) {
   
   // Retrieve cached profile picture from Electron Store
   function getProfilePicFromStore() {
-    return store.get('profilePic', 'assets/profile/empty.png'); // Default avatar if not found
+    return store.get('profilePic'); // Returns undefined if the key doesn't exist
   }
 
 async function storeUserInfo(userInfo, retries = 5) {
