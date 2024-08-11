@@ -1,13 +1,17 @@
-//                              __
-//    ____     ____          __/ /_ __        __
-//   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
-//  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
-// /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
-//
-// Antariksh Pratham, N1191635
-// Major Project appplication
-// Masters in Cloud Computing, Nottingham Trent University
-
+/* ------------------ Electron Main Process ------------------ 
+                                __
+ *    ____     ____          __/ /_ __        __
+ *   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
+ *  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
+ * /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
+ *
+ * ----------------------------------------------------------
+ * 
+ * Antariksh Pratham, N1191635
+ * Major Project appplication
+ * Masters in Cloud Computing, Nottingham Trent University
+ * ----------------------------------------------------------
+*/
 
 const { app, BrowserWindow, ipcMain, protocol } = require('electron');
 const { OAuth2Client } = require('google-auth-library');
@@ -39,6 +43,8 @@ let splashWindow;
 
 ipcMain.on('get-user-info', (event) => {
   const userInfo = store.get('userInfo', null);
+  //console.log(store.path);
+  //console.log(store.store);
   event.returnValue = userInfo; // Send the stored user info back to Angular
 });
 

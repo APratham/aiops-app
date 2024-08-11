@@ -23,7 +23,7 @@
       "dom"
     ],
     "useDefineForClassFields": false,
-    "typeRoots": ["./node_modules/@types", "./src/custom-electron-api.d.ts"]
+    "typeRoots": ["./node_modules/@types", "./src/electron-api.d.ts"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
