@@ -354,3 +354,6 @@ const validateMsToken = async (accessToken) => {
 app.on('window-all-closed', () => {
   app.quit();
 });
+
+module.exports = { validateGoogleToken };
+
