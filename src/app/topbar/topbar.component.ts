@@ -9,7 +9,7 @@ import { UserInfoService } from '../user-info.service';
 export class TopBarComponent implements OnInit {
   @Input() title: string = 'Default Title';
   @Input() logo: string = '/assets/logo.svg';
-  profilePic: string = 'assets/profile/avatar.jpg';
+  profilePic: string = 'assets/profile/empty.png';
 
   constructor(private userInfoService: UserInfoService) {}
 

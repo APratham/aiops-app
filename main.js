@@ -181,6 +181,7 @@ async function createMainWindow() {
       keytar.deletePassword(SERVICE_NAME, GOOGLE_UNIQUE_ID_KEY),
       keytar.deletePassword(SERVICE_NAME, MS_ACCOUNT_NAME),
       keytar.deletePassword(SERVICE_NAME, MS_UNIQUE_ID_KEY),
+      store.delete('userInfo'),
     ]);
     mainWindow.webContents.send('logout-success');
     console.log('Stored tokens cleared');
