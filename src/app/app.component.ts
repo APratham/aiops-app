@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
 import { ElectronService } from './electron.service';
-import { Title } from '@angular/platform-browser';
-import { filter } from 'rxjs/operators';
-import { IpcRendererEvent } from 'electron';
 
 @Component({
   selector: 'app-root',
@@ -13,35 +9,33 @@ import { IpcRendererEvent } from 'electron';
 export class AppComponent implements OnInit {
   userInfo: any;
 
-  constructor(
-    private router: Router,
-    private titleService: Title,
-    private electronService: ElectronService
-  ) {}
+  constructor(private electronService: ElectronService) {}
 
   ngOnInit() {
-    // Set up router events to update the title
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const currentRoute = this.router.routerState.snapshot.root;
-        const title = this.getTitle(currentRoute);
-        this.titleService.setTitle(title);
+    if (this.electronService.isElectron()) {
+      // Handle app start event
+      this.electronService.onAppStart((data) => {
+        if (data.isLoggedIn) {
+          console.log('User is logged in with sub:', data.sub);
 
-        // Send the title to Electron to update the window title
-        if (this.electronService.isElectron()) {
-          this.electronService.ipcRenderer.send('update-title', title);
+          // Query Electron Store for user session data
+          this.electronService.electronStore.get('user_session').then((sessionData) => {
+            console.log('Session Data from Electron Store:', sessionData);
+            if (sessionData) {
+              this.userInfo = sessionData;
+              console.log(`User ${sessionData.name} logged in with profile picture: ${sessionData.picture}`);
+            }
+          });
+        } else {
+          console.log('No user is logged in');
         }
       });
 
-
-  }
-
-  getTitle(routeSnapshot: any): string {
-    let title = routeSnapshot.data['title'] || '';
-    if (routeSnapshot.firstChild) {
-      title = this.getTitle(routeSnapshot.firstChild) || title;
+      // Handle user session data event (for login)
+      this.electronService.onUserSessionData((sessionData) => {
+        console.log('Received session data:', sessionData);
+        this.userInfo = sessionData;
+      });
     }
-    return title;
   }
 }

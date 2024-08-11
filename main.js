@@ -1,13 +1,17 @@
-//                              __
-//    ____     ____          __/ /_ __        __
-//   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
-//  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
-// /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
-//
-// Antariksh Pratham, N1191635
-// Major Project appplication
-// Masters in Cloud Computing, Nottingham Trent University
-
+/* ------------------ Electron Main Process ------------------ 
+ *                              __
+ *    ____     ____          __/ /_ __        __
+ *   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
+ *  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
+ * /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
+ *
+ * -----------------------------------------------------------
+ * 
+ * Antariksh Pratham, N1191635
+ * Major Project appplication
+ * Masters in Cloud Computing, Nottingham Trent University
+ * -----------------------------------------------------------
+*/ 
 
 const { app, BrowserWindow, ipcMain, protocol } = require('electron');
 const { OAuth2Client } = require('google-auth-library');
@@ -16,10 +20,11 @@ const msal = require('@azure/msal-node');
 const crypto = require('crypto');
 const keytar = require('keytar');
 const fetch = require('node-fetch');
+const Store = require('electron-store');
 const URL = require('url').URL;
 const path = require('path');
 
-const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
+const { storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
 const GOOGLE_ACCOUNT_NAME = 'google-oauth-token';
@@ -29,10 +34,35 @@ const MS_UNIQUE_ID_KEY = 'ms-unique-id';
 
 // Store the base URL in a variable
 const BASE_URL = 'http://localhost:3000';
+const store = new Store();
 
 let mainWindow;
 let authWindow;
 let splashWindow;
+
+
+// IPC listeners to interact with Electron Store
+ipcMain.handle('electron-store-get', (event, key) => {
+  return store.get(key);
+});
+
+ipcMain.handle('electron-store-set', (event, key, value) => {
+  store.set(key, value);
+});
+
+ipcMain.handle('electron-store-clear', () => {
+  store.clear();
+});
+
+ipcMain.handle('electron-store-delete', (event, key) => {
+  store.delete(key);
+});
+
+// IPC listener to get user session data
+ipcMain.on('get-user-session-data', (event) => {
+  const userSessionData = store.get('user_session');
+  event.sender.send('user-session-data', userSessionData);
+});
 
 app.on('ready', async () => {
   protocol.registerHttpProtocol('msal', (request, callback) => {
@@ -50,6 +80,8 @@ app.on('ready', async () => {
   ipcMain.on('update-title', (event, title) => {
     mainWindow.setTitle(title);
   });
+
+
 
   splashWindow = new BrowserWindow({
     width: 800,
@@ -81,10 +113,23 @@ async function createMainWindow() {
     },
   });
 
+
+
   mainWindow.webContents.once('did-finish-load', () => {
     if (process.env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools(); // Open DevTools in development mode
     }
+
+    const userSessionData = store.get('user_session');
+    if (userSessionData) {
+      // Send user session data if available
+      mainWindow.webContents.send('app-start', { isLoggedIn: true, sub: userSessionData.sub });
+      console.log('User session data sent to Angular');
+  } else {
+      // Notify that user is not logged in
+      mainWindow.webContents.send('app-start', { isLoggedIn: false });
+      console.log('User not logged in, no data sent to Angular');
+  }
   });
 
     // Handle checking authentication status
@@ -157,11 +202,26 @@ async function createMainWindow() {
       keytar.deletePassword(SERVICE_NAME, GOOGLE_UNIQUE_ID_KEY),
       keytar.deletePassword(SERVICE_NAME, MS_ACCOUNT_NAME),
       keytar.deletePassword(SERVICE_NAME, MS_UNIQUE_ID_KEY),
+      store.delete('user_session'),
     ]);
     mainWindow.webContents.send('logout-success');
+    console.log('Stored user data cleared');
     console.log('Stored tokens cleared');
     mainWindow.loadURL(`${BASE_URL}/login`);
   });
+}
+
+// Function to store the sub, name, and timestamp in Electron Store and send via IPC
+function storeUserSessionData(sub, name) {
+  const timestamp = new Date().toISOString();
+  
+  // Print the data being stored
+  console.log(`Storing in electron-store: sub=${sub}, name=${name}, timestamp=${timestamp}`);
+  
+  store.set('user_session', { sub, name, timestamp });
+
+  // Send the data to Angular via IPC
+  mainWindow.webContents.send('user-session-data', { sub, name, timestamp });
 }
 
 const startGoogleAuth = async (mainWindow) => {
@@ -308,6 +368,11 @@ const validateGoogleToken = async (tokens) => {
     });
     console.log('User Info:', res.data); // Log the user info to verify
 
+    const { sub, name } = res.data; // Extract the sub and name fields
+
+    // Store the session data and send to Angular
+    storeUserSessionData(sub, name);
+
     // Store user info in MongoDB and cache in SQLite
     await storeUserInfo(res.data);
     cacheUserInfo(res.data);
@@ -340,8 +405,8 @@ const validateMsToken = async (accessToken) => {
     console.log('User Info:', userInfo); // Log the user info to verify
 
     // Store user info in MongoDB and cache in SQLite
-    await storeUserInfo(userInfo);
-    cacheUserInfo(userInfo);
+    // storeUserInfo(userInfo);
+    //cacheUserInfo(userInfo);
 
     mainWindow.webContents.send('user-info', userInfo);
     return true;
