@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { NavController, MenuController, PopoverController } from '@ionic/angular';  // Ensure correct imports
 import { UserInfoService } from '../user-info.service';
+import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-top-bar',
@@ -13,7 +14,11 @@ export class TopBarComponent implements OnInit {
   profilePic: string = 'assets/profile/avatar.jpg';
   userInfo: any = null;
 
-  constructor(private userInfoService: UserInfoService, private menu: MenuController) {}
+  constructor(
+    private userInfoService: UserInfoService,
+    private menu: MenuController,
+    private popoverCtrl: PopoverController
+  ) {}
 
   ngOnInit() {
     this.userInfo = this.userInfoService.getUserInfo();
@@ -39,7 +44,57 @@ export class TopBarComponent implements OnInit {
     return this.userInfo !== null;
   }
 
-  openMenu() {
-    this.menu.open('profileMenu');
+  async presentPopover(ev: any) {
+    if (!ev) {
+      console.error("Popover event is null or undefined, cannot present popover.");
+      return;
+    }
+
+    const popover = await this.popoverCtrl.create({
+      component: PopoverContentDynamicComponent,
+      event: ev,
+      translucent: true,
+      cssClass: 'popover-menu'
+    });
+
+    if (popover) {
+      await popover.present();
+    } else {
+      console.error("Popover creation failed, popover is null or undefined.");
+    }
+  }
+
+  navigateTo(route: string) {
+    // Implement navigation logic
+  }
+
+  logout() {
+    // Implement logout logic
+  }
+}
+
+@Component({
+  template: `
+    <ion-list>
+      <ion-item (click)="navigateTo('/profile')">Profile</ion-item>
+      <ion-item (click)="navigateTo('/settings')">Settings</ion-item>
+      <ion-item (click)="logout()">Logout</ion-item>
+    </ion-list>
+  `
+})
+export class PopoverContentDynamicComponent {
+  constructor(
+    @Inject(NavController) private navCtrl: NavController,
+    @Inject(PopoverController) private popoverCtrl: PopoverController
+  ) {}
+
+  navigateTo(route: string) {
+    this.navCtrl.navigateForward(route);
+    this.popoverCtrl.dismiss();
+  }
+
+  logout() {
+    // Implement logout logic
+    this.popoverCtrl.dismiss();
   }
 }

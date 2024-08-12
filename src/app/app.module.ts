@@ -13,11 +13,12 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
-import { TopBarComponent } from './topbar/topbar.component';
+import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
+
 import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, MenuComponent],
+  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, MenuComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

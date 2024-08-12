@@ -36,4 +36,43 @@ ion-header {
     margin: 8px;
     border-radius: 50%;
 }
-  
+
+/* topbar.component.scss */
+::ng-deep .popover-menu {
+  --background: #2c3e50; /* Darker background color */
+  --border-radius: 4px; /* Slightly rounded corners */
+  --width: 200px; /* Custom width */
+  --height: auto; /* Auto height depending on content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for a more desktop-like feel */
+}
+
+::ng-deep .popover-menu ion-item {
+  --border-width: 0px !important; /* Remove border */
+  --border-color: transparent !important; /* Ensure border color is transparent */
+  --border-style: none !important; /* Explicitly set border style to none */
+  padding: 10px 15px; /* Adjust padding between items */
+  color: #ecf0f1; /* Light text color for contrast against the dark background */
+  --background: transparent !important; /* Ensure the background is transparent */
+}
+
+::ng-deep .popover-menu ion-item::after {
+  display: none !important; /* Remove any pseudo-element that might create a border */
+}
+
+::ng-deep .popover-menu ion-item:last-child {
+  --border-width: 0px !important; /* Remove border for the last item */
+  border-bottom: none; /* Additional safeguard to remove the last border */
+}
+
+::ng-deep .popover-menu ion-item:hover {
+  background-color: #34495e; /* Darker background color on hover */
+  color: #ecf0f1; /* Text color stays the same on hover */
+}
+
+::ng-deep .popover-menu ion-list {
+  --background: transparent; /* Ensure the list background is transparent */
+  --border-color: transparent; /* Remove any borders from the list */
+}
+
+
+

@@ -5,33 +5,23 @@
     </ion-buttons>
     <ion-title *ngIf="isAuthenticated()">{{ title }}</ion-title>
     <ion-buttons slot="end" *ngIf="isAuthenticated()">
-      <ion-button (click)="openMenu()">
+      <ion-button (click)="presentPopover($event)">
         <img src="{{ profilePic }}" alt="Profile Picture" class="profile-pic" />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-
-
-
-<!-- Add the Ion Menu here -->
-<ion-menu side="end" menuId="profileMenu" contentId="main-content">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>Profile Menu</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item routerLink="/profile">Profile</ion-item>
-      <ion-item routerLink="/settings">Settings</ion-item>
-      <ion-item routerLink="/logout">Logout</ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
-
 <!-- Your main content area -->
 <ion-content id="main-content">
   <!-- The rest of your page content goes here -->
 </ion-content>
+
+<!-- Inline template for popover content -->
+<ng-template #popoverTemplate>
+  <ion-list>
+    <ion-item (click)="navigateTo('/profile')">Profile</ion-item>
+    <ion-item (click)="navigateTo('/settings')">Settings</ion-item>
+    <ion-item (click)="logout()">Logout</ion-item>
+  </ion-list>
+</ng-template>
