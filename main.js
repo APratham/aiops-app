@@ -1,5 +1,5 @@
 /* ------------------ Electron Main Process ------------------ 
-                                __
+ *                              __
  *    ____     ____          __/ /_ __        __
  *   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
  *  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
@@ -10,6 +10,19 @@
  * Antariksh Pratham, N1191635
  * Major Project appplication
  * Masters in Cloud Computing, Nottingham Trent University
+ * ----------------------------------------------------------
+ * 
+ * This file is the main process of the Electron application and
+ * manages the entire application lifecycle. It creates the main
+ * window, handles authentication, and communicates with the 
+ * FastAPI backend for different tasks.
+ * ----------------------------------------------------------
+ * 
+ * Electron Main Process: main.js
+ * Ionic/Angular Frontend: index.html
+ * Angular AppModule: src/app/app.module.ts
+ * Express Server: express.js
+ * FastAPI Backend: backend/main.py
  * ----------------------------------------------------------
 */
 
