@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NavController, MenuController, PopoverController } from '@ionic/angular';  // Ensure correct imports
+import { Component, Input, OnInit, Inject } from '@angular/core';
+import { NavController, MenuController, PopoverController } from '@ionic/angular';
 import { UserInfoService } from '../user-info.service';
-import { Inject } from '@angular/core';
 
 @Component({
   selector: 'app-top-bar',
@@ -13,11 +12,13 @@ export class TopBarComponent implements OnInit {
   @Input() logo: string = '/assets/logo.svg';
   profilePic: string = 'assets/profile/avatar.jpg';
   userInfo: any = null;
+  ipcRenderer = (window as any).electron.ipcRenderer;
 
   constructor(
     private userInfoService: UserInfoService,
     private menu: MenuController,
-    private popoverCtrl: PopoverController
+    private popoverCtrl: PopoverController,
+    private navCtrl: NavController  // Inject NavController for navigation
   ) {}
 
   ngOnInit() {
@@ -25,12 +26,12 @@ export class TopBarComponent implements OnInit {
 
     if (this.userInfo && this.userInfo.picture) {
       this.profilePic = this.userInfo.picture;
-    } else if (window.electron && window.electron.ipcRenderer) {
-      this.profilePic = window.electron.ipcRenderer.sendSync('get-profile-pic') as string;
+    } else if (this.ipcRenderer) {
+      this.profilePic = this.ipcRenderer.sendSync('get-profile-pic') as string;
     }
 
-    if (window.electron && window.electron.ipcRenderer) {
-      window.electron.ipcRenderer.on('user-info', (event, userInfo) => {
+    if (this.ipcRenderer) {
+      this.ipcRenderer.on('user-info', (event: any, userInfo: any) => {
         if (userInfo && userInfo.picture) {
           this.profilePic = userInfo.picture;
           this.userInfo = userInfo;
@@ -65,11 +66,18 @@ export class TopBarComponent implements OnInit {
   }
 
   navigateTo(route: string) {
-    // Implement navigation logic
+    this.navCtrl.navigateForward(route);
   }
 
   logout() {
-    // Implement logout logic
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('logout');
+
+      // Wait for the logout-success event from Electron
+      this.ipcRenderer.once('logout-success', () => {
+        this.navCtrl.navigateRoot('/login');  // Navigate to the login page
+      });
+    }
   }
 }
 
@@ -83,6 +91,8 @@ export class TopBarComponent implements OnInit {
   `
 })
 export class PopoverContentDynamicComponent {
+  ipcRenderer = (window as any).electron.ipcRenderer;
+
   constructor(
     @Inject(NavController) private navCtrl: NavController,
     @Inject(PopoverController) private popoverCtrl: PopoverController
@@ -94,7 +104,14 @@ export class PopoverContentDynamicComponent {
   }
 
   logout() {
-    // Implement logout logic
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('logout');
+
+      // Wait for the logout-success event from Electron
+      this.ipcRenderer.once('logout-success', () => {
+        this.navCtrl.navigateRoot('/login');  // Navigate to the login page
+      });
+    }
     this.popoverCtrl.dismiss();
   }
 }
