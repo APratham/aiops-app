@@ -3,34 +3,49 @@ const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const rateLimit = require('express-rate-limit');
-const dalRoutes = require('./data-layer/expressDal'); // Import DAL routes
+const dalRoutes = require('./data-layer/expressDal'); 
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Serve static files from the 'www' directory
+
 app.use(express.static(path.join(__dirname, 'www')));
 
-// Apply rate limiting to API routes
+
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, 
+  max: 100, 
   message: 'Too many requests from this IP, please try again after 15 minutes',
 });
 
-app.use('/api', apiLimiter); // Apply rate limiting to the /api route
+app.use('/api', apiLimiter); 
 
-// Proxy API requests to the FastAPI backend
-app.use('/api', createProxyMiddleware({
-  target: 'http://localhost:8000', // FastAPI backend URL
+app.use('/api', (req, res, next) => {
+  console.log(`Received request: ${req.method} ${req.url}`);
+  console.log(`Authorization header: ${req.headers['authorization']}`);
+  next();
+}, 
+createProxyMiddleware({  // This is where createProxyMiddleware is being used
+  target: 'http://localhost:8000',
   changeOrigin: true,
-  timeout: 5000,
-  proxyTimeout: 5000,
+  timeout: 30000,
+  proxyTimeout: 30000,
+  onProxyReq: (proxyReq, req, res) => {
+    console.log('Forwarding request to backend');
+    if (req.headers['authorization']) {
+      proxyReq.setHeader('Authorization', req.headers['authorization']);
+    }
+  },
+  onError: (err, req, res) => {
+    console.error('Proxy error:', err);
+    res.status(504).send('Proxy error: Unable to reach the backend service');
+  },
 }));
 
-app.use('/dal', dalRoutes); // All DAL-related routes are prefixed with /dal
 
-// Catch-all route to serve the Angular app
+app.use('/dal', dalRoutes); 
+
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'www', 'index.html'));
 });

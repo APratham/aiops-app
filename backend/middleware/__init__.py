@@ -1,5 +1,5 @@
-from .cors_middleware import CORSMiddleware
+from .cors_middleware import CORSConfig
 
 __all__ = [
-    "CORSMiddleware",
+    "CORSConfig",
 ]

@@ -13,4 +13,3 @@ class User(BaseModel):
 
 class UserInfo(BaseModel):
     user_email: str
-    message: str    

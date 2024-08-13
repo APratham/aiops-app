@@ -1,7 +1,7 @@
 # middleware.py
 from fastapi.middleware.cors import CORSMiddleware
 
-def CORSMiddleware(app):
+def CORSConfig(app):
     origins = [
         "http://localhost:8100",
         "http://127.0.0.1:8100",
