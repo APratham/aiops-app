@@ -15,10 +15,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
 
-import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, MenuComponent],
+  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

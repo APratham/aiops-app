@@ -38,6 +38,7 @@ const URL = require('url').URL;
 const path = require('path');
 
 const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
+const { checkAndRefreshGoogleToken } = require('./tokenManager');
 const dal = require('./data-layer/dal');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
@@ -118,7 +119,7 @@ async function createMainWindow() {
     },
   });
 
-  mainWindow.webContents.once('did-finish-load', () => {
+  mainWindow.webContents.once('did-finish-load', () => { // Ensure this function is asyn
     if (process.env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools(); // Open DevTools in development mode
     }
@@ -153,11 +154,14 @@ async function createMainWindow() {
     if (googleTokens || msTokens) {
       console.log('Tokens found, loading dashboard...');
       mainWindow.loadURL(`${BASE_URL}/dashboard`);
-      mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow.webContents.once('did-finish-load', async () => {
         // Handle tokens if they exist
         if (googleTokens) {
           const tokens = JSON.parse(googleTokens);
           mainWindow.webContents.send('auth-success', { tokens, uniqueId: googleUniqueId });
+          await checkAndRefreshGoogleToken (tokens);
+          setInterval(() =>  checkAndRefreshGoogleToken(tokens), 15 * 60 * 1000);
+                   
           validateGoogleToken(tokens).then(isValid => {
             mainWindow.webContents.send('token-validity', isValid);
           });
@@ -360,8 +364,6 @@ const validateGoogleToken = async (tokens) => {
     return false;
   }
 };
-
-
 
 const validateMsToken = async (accessToken) => {
   const url = "https://graph.microsoft.com/v1.0/me";
