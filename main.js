@@ -39,6 +39,7 @@ const path = require('path');
 
 const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
 const { checkAndRefreshGoogleToken } = require('./tokenManager');
+const { setupApiManager } = require('./apiManager');
 const dal = require('./data-layer/dal');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
@@ -159,12 +160,37 @@ async function createMainWindow() {
         if (googleTokens) {
           const tokens = JSON.parse(googleTokens);
           mainWindow.webContents.send('auth-success', { tokens, uniqueId: googleUniqueId });
-          await checkAndRefreshGoogleToken (tokens);
-          setInterval(() =>  checkAndRefreshGoogleToken(tokens), 15 * 60 * 1000);
-                   
+      
+          // Initial token check and setup
+          await checkAndRefreshGoogleToken(tokens);
           validateGoogleToken(tokens).then(isValid => {
-            mainWindow.webContents.send('token-validity', isValid);
+              mainWindow.webContents.send('token-validity', isValid);
+      
+              if (isValid) {
+                  setupApiManager(tokens);
+              } else {
+                  console.error('Token validation failed. API manager not set up.');
+              }
           });
+      
+          // Periodically refresh token and revalidate it every 15 minutes
+          setInterval(async () => {
+              await checkAndRefreshGoogleToken(tokens);
+              
+              validateGoogleToken(tokens).then(isValid => {
+                  mainWindow.webContents.send('token-validity', isValid);
+      
+                  if (isValid) {
+                      // Re-setup the API manager with the refreshed token
+                      setupApiManager(tokens);
+                      console.log('API Manager refreshed successfully');
+                  } else {
+                      console.error('Token validation failed during refresh. API manager not reset.');
+                  }
+              });
+          }, 15 * 60 * 1000);
+      
+      
         } else if (msTokens) {
           const { tokens, account } = JSON.parse(msTokens);
           mainWindow.webContents.send('auth-success', { tokens, uniqueId: msUniqueId });

@@ -14,9 +14,14 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     const logoutButton = document.querySelector('ion-button#logout');
+    const callApiButton = document.querySelector('ion-button#callapi');
 
     logoutButton?.addEventListener('click', () => {
       this.ipcRenderer.send('logout');
+    });
+
+    callApiButton?.addEventListener('click', () => {
+      this.ipcRenderer.send('call-protected-endpoint');
     });
 
     this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {

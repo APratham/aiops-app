@@ -10,3 +10,7 @@ class User(BaseModel):
     given_name: str
     family_name: str 
     picture: str
+
+class UserInfo(BaseModel):
+    user_email: str
+    message: str    
