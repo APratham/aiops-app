@@ -24,6 +24,30 @@
  * Express Server: express.js
  * FastAPI Backend: backend/main.py
  * ----------------------------------------------------------
+ * 
+ * GNU Affero General Public License v3 (AGPLv3)
+ * 
+ * This software is licensed under the GNU Affero General Public 
+ * License version 3 (AGPLv3). By using or modifying this software, 
+ * you agree to the following terms:
+ * 
+ * 1. Source Code Availability: You must provide access to the complete
+ *   source code of any modified version of this software when it is
+ *  used to provide a service over a network. This obligation extends
+ *  to the source code of the software itself and any derivative works.
+ * 
+ * 2. Copyleft: Any distribution of this software or derivative works
+ * must be licensed under the AGPLv3. You may not impose any additional
+ * restrictions beyond those contained in this license.
+ * 
+ * 3. Disclaimer of Warranty: This software is provided "as-is," without
+ * any warranty of any kind, express or implied, including but not 
+ * limited to the warranties of merchantability or fitness for a 
+ * particular purpose.
+ * 
+ * For the full terms of the AGPLv3, please refer to the full license 
+ * text available at https://www.gnu.org/licenses/agpl-3.0.html.
+ * ----------------------------------------------------------
 */
 
 const { app, BrowserWindow, ipcMain, protocol } = require('electron');

@@ -1,44 +1,68 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, Header, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jose import JWTError, jwt
+
 from pydantic import BaseModel
 from google.auth import jwt
 from google.auth.transport import requests
 from pydantic_models import *
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
-from middleware import CORSMiddleware
+from middleware import CORSConfig
 import requests
 import json
 import os
+import logging
 
 app = FastAPI()
 
-CORSMiddleware(app)
+CORSConfig(app)
 
 GOOGLE_OAUTH2_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo"
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 
-async def verify_google_oauth_token(token: str):
+async def verify_google_oauth_token(authorization: str = Header(...)):
     try:
-        # Asynchronous token verification
-        idinfo = jwt.decode(token, audience=CLIENT_ID, request=requests.Request())
+        scheme, token = authorization.split()
         
-        if idinfo['aud'] != CLIENT_ID:
-            raise ValueError('Could not verify audience.')
+        if scheme.lower() != "bearer":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication scheme",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
         
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
+        # Verify the access token using Google's tokeninfo endpoint
+        response = requests.get(f'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token={token}')
+
+        token_info = response.json()
+        logging.error(token_info)
         
-        # Token is valid; return user information
-        return idinfo
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"Invalid token: {token_info.get('error_description', 'Unknown error')}",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        # Check if the token's audience matches your CLIENT_ID
+        if token_info['audience'] != CLIENT_ID:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not verify audience.",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        
+        # Token is valid; return user information (e.g., email, user_id)
+        return token_info
     
-    except ValueError as e:
+    except HTTPException:
+        raise
+    except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
+            detail=f"Could not validate credentials: {e}",
             headers={"WWW-Authenticate": "Bearer"},
         )
     

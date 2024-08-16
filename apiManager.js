@@ -11,7 +11,7 @@ function setupApiManager(token) {
             }
 
             // Make the request to the protected endpoint
-            const response = await axios.get('http://localhost:3000/api/protected-endpoint', {
+            const response = await axios.get('http://localhost:8000/api/protected-endpoint', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
