@@ -72,4 +72,8 @@ async def protected_endpoint(idinfo: dict = Depends(verify_google_oauth_token)):
         "message": "This is a protected endpoint",
         "user_email": idinfo['email']
     }
-    return JSONResponse(content=response_data)    
+    return JSONResponse(content=response_data) 
+
+@app.get("/test-endpoint")
+async def test_endpoint():
+    return {"message": "FastAPI is working!"}   

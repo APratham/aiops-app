@@ -1,7 +1,10 @@
 {
-  "name": "testApp",
+  "name": "aiops-ionic",
   "integrations": {
     "capacitor": {}
   },
-  "type": "angular"
+  "type": "angular",
+  "serve": {
+    "port": 8100
+  }
 }

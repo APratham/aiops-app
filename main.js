@@ -1,4 +1,4 @@
-/* ------------------ Electron Main Process ------------------ 
+ /* ------------------ Electron Main Process ------------------ 
  *                              __
  *    ____     ____          __/ /_ __        __
  *   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
@@ -73,7 +73,7 @@ const MS_ACCOUNT_NAME = 'ms-oauth-token';
 const MS_UNIQUE_ID_KEY = 'ms-unique-id';
 
 // Store the base URL in a variable
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:4200';
 const store = new Store();
 
 let mainWindow;
