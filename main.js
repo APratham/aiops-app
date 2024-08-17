@@ -205,8 +205,8 @@ async function createMainWindow() {
                   mainWindow.webContents.send('token-validity', isValid);
       
                   if (isValid) {
-                      // Re-setup the API manager with the refreshed token
-
+                      console.log('Writing token to store... ', tokens);
+                      store.set('googleTokens', tokens);
                       console.log('Tokens refreshed successfully');
                   } else {
                       console.error('Unable to refresh tokens');
@@ -271,8 +271,15 @@ const startGoogleAuth = async (mainWindow) => {
   const code = await getOAuthCodeByInteraction(authWindow, url);
   const response = await client.getToken(code);
   const uniqueId = crypto.randomUUID();
+
   await keytar.setPassword(SERVICE_NAME, GOOGLE_ACCOUNT_NAME, JSON.stringify(response.tokens));
   await keytar.setPassword(SERVICE_NAME, GOOGLE_UNIQUE_ID_KEY, uniqueId);
+
+  console.log('Google Auth Success:', response.tokens);
+  console.log('Writing tokens to store... ', response.tokens);
+
+  store.set('googleTokens', response.tokens);
+  
   mainWindow.webContents.send('auth-success', { tokens: response.tokens, uniqueId });
 
   const isValid = await validateGoogleToken(response.tokens);
