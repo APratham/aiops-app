@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { IpcRendererEvent } from 'electron';
+
+interface ApiResponse {
+  message: string;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -10,18 +15,22 @@ export class DashboardComponent implements OnInit {
 
   ipcRenderer = (window as any).electron.ipcRenderer;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     const logoutButton = document.querySelector('ion-button#logout');
     const callApiButton = document.querySelector('ion-button#callapi');
 
-    logoutButton?.addEventListener('click', () => {
-      this.ipcRenderer.send('logout');
-    });
-
     callApiButton?.addEventListener('click', () => {
-      this.ipcRenderer.send('call-protected-endpoint');
+      this.http.get<ApiResponse>('http://localhost:8000/test-endpoint', { observe: 'response' })
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+        },
+        error: (error) => {
+          console.error('Error: ', error);
+        }
+      });
     });
 
     this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
