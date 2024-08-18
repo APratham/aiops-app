@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
           'Authorization': `Bearer ${this.accessToken}`
         });
 
-        this.http.get<ApiResponse>('http://localhost:3000/api/protected-endpoint', { headers })
+        this.http.get<ApiResponse>('http://localhost:3000/api/test-endpoint', { headers })
           .subscribe({
             next: (response) => {
               console.log('API response:', response);
