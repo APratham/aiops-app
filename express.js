@@ -3,6 +3,7 @@ const path = require('path');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const rateLimit = require('express-rate-limit');
+const morgan = require('morgan'); // Use morgan for logging
 const dalRoutes = require('./data-layer/expressDal'); // Import DAL routes
 
 
@@ -17,9 +18,28 @@ const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again after 15 minutes',
+  handler: (req, res, /* next */) => {
+    res.status(429).send('Too many requests from this IP, please try again after 15 minutes');
+  },
 });
 
+
 app.use('/api', apiLimiter); // Apply rate limiting to the /api route
+
+// Use morgan for logging requests
+app.use(morgan((tokens, req, res) => {
+  const remaining = req.rateLimit ? req.rateLimit.remaining : 'N/A';
+  return [
+    `[0] INFO:`,
+    tokens['remote-addr'](req, res),
+    '-',
+    `"${tokens.method(req, res)} ${tokens.url(req, res)} HTTP/${tokens['http-version'](req, res)}"`,
+    tokens.status(req, res),
+    tokens['response-time'](req, res), 'ms',
+    `- ${tokens.res(req, res, 'content-length') || 0} bytes`,
+    `- ${remaining} requests remaining`
+  ].join(' ');
+}));
 
 // Proxy API requests to the FastAPI backend
 app.use('/api', createProxyMiddleware({
