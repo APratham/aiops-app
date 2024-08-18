@@ -64,6 +64,7 @@ const path = require('path');
 const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
 const { checkAndRefreshGoogleToken } = require('./tokenManager');
 const { setupApiManager } = require('./apiManager');
+const { ipcManager } = require('./ipcManager');
 const dal = require('./data-layer/dal');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
@@ -131,6 +132,8 @@ app.on('ready', async () => {
     await createMainWindow();
     splashWindow.close();
   }, 5000); // Show splash screen for 5 seconds
+
+  ipcManager();
 });
 
 async function createMainWindow() {
@@ -279,7 +282,7 @@ const startGoogleAuth = async (mainWindow) => {
   console.log('Writing tokens to store... ', response.tokens);
 
   store.set('googleTokens', response.tokens);
-  
+
   mainWindow.webContents.send('auth-success', { tokens: response.tokens, uniqueId });
 
   const isValid = await validateGoogleToken(response.tokens);
