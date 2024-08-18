@@ -77,3 +77,6 @@ async def protected_endpoint(idinfo: dict = Depends(verify_google_oauth_token)):
 @app.get("/test-endpoint")
 async def test_endpoint():
     return {"message": "FastAPI is working!"}   
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

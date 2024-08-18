@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
     const callApiButton = document.querySelector('ion-button#callapi');
 
     callApiButton?.addEventListener('click', () => {
-      this.http.get<ApiResponse>('http://localhost:8000/test-endpoint')
+      this.http.get<ApiResponse>('http://localhost:3000/api/test-endpoint')
       .subscribe({
         next: (response) => {
           console.log(response);

@@ -1,9 +1,10 @@
 const express = require('express');
 const path = require('path');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const httpProxy = require('http-proxy');
 
 const rateLimit = require('express-rate-limit');
 const dalRoutes = require('./data-layer/expressDal'); // Import DAL routes
+const proxy = httpProxy.createProxyServer({});
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,12 +22,16 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter); // Apply rate limiting to the /api route
 
 // Proxy API requests to the FastAPI backend
-app.use('/api', createProxyMiddleware({
-  target: 'http://localhost:8000', // FastAPI backend URL
-  changeOrigin: true,
-  timeout: 5000,
-  proxyTimeout: 5000,
-}));
+app.use('/api', (req, res) => {
+
+  // Log the full URL that Express is sending the request to
+  console.log(`Proxying request to: ${req.url}`);
+
+  proxy.web(req, res, { target: 'http://0.0.0.0:8000', timeout: 10000 }, (err) => {
+    console.error(err);
+    res.status(502).send('Bad Gateway');
+  });
+});
 
 app.use('/dal', dalRoutes); // All DAL-related routes are prefixed with /dal
 
