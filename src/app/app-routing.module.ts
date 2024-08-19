@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './auth.guard';  // Import the AuthGuard
+import { NotFoundGuard } from './not-found.guard'; 
 
 const routes: Routes = [
   {
@@ -28,8 +29,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'login',  // Fallback route redirects to login for undefined routes
-    pathMatch: 'full'
+    canActivate: [NotFoundGuard] // Protect all other routes with the NotFoundGuard
   },
 ];
 

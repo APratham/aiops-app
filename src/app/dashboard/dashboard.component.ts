@@ -1,22 +1,58 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IpcRendererEvent } from 'electron';
+ 
+interface ApiResponse {
+  message: string;
+}
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
+
 export class DashboardComponent implements OnInit {
 
   ipcRenderer = (window as any).electron.ipcRenderer;
+  accessToken: string | null = null;
 
-  constructor() { }
+
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     const logoutButton = document.querySelector('ion-button#logout');
+    const callApiButton = document.querySelector('ion-button#callapi');
 
-    logoutButton?.addEventListener('click', () => {
-      this.ipcRenderer.send('logout');
+    // Fetch the value from electron-store
+    this.getStoreValue('googleTokens').then((value) => {
+      if (value && value.access_token) {
+        this.accessToken = value.access_token;
+        console.log('Access token:', this.accessToken);
+      } else {
+        console.warn('No access token found in googleTokens');
+      }
+    });
+
+    // Setup API call with the token
+    callApiButton?.addEventListener('click', () => {
+      if (this.accessToken) {
+        const headers = new HttpHeaders({
+          'Authorization': `Bearer ${this.accessToken}`
+        });
+
+        this.http.get<ApiResponse>('http://localhost:3000/api/test-endpoint', { headers })
+          .subscribe({
+            next: (response) => {
+              console.log('API response:', response);
+            },
+            error: (error) => {
+              console.error('API error:', error);
+            }
+          });
+      } else {
+        console.error('No access token available. Cannot make the API call.');
+      }
     });
 
     this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
@@ -53,4 +89,18 @@ export class DashboardComponent implements OnInit {
       }
     }
   }
+
+  async getStoreValue(key: string): Promise<any> {
+    try {
+      const value = await (window as any).electron.ipcRenderer.invoke('get-store-value', key);
+      if (value === undefined) {
+        console.warn(`No value found in electron-store for key: ${key}`);
+      }
+      return value;
+    } catch (error) {
+      console.error('Failed to get value from electron-store:', error);
+      return null;
+    }
+  }
+  
 }

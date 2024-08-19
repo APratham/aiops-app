@@ -14,7 +14,11 @@
     "electron": "ng build && electron .",
     "server": "node express.js",
     "backend": "node start-backend.js",
-    "start-all": "concurrently \"npm run backend\" \"npm run server\" \"npm run electron\""
+    "start-all": "concurrently \"npm run backend\" \"npm run server\" \"npm run electron\"",
+    "postinstall": "electron-builder install-app-deps",
+    "rebuild-all": "electron-rebuild -f",
+    "rebuild-google": "electron-rebuild -f -w google-auth-library",
+    "rebuild-sqlite": "electron-rebuild -f -w better-sqlite3"
   },
   "private": true,
   "dependencies": {
@@ -35,14 +39,21 @@
     "@capacitor/status-bar": "6.0.0",
     "@ionic/angular": "^8.0.0",
     "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5",
     "electron": "^31.3.1",
+    "electron-store": "^8.2.0",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
     "google-auth-library": "^9.13.0",
     "http-proxy-middleware": "^3.0.0",
     "ionicons": "^7.0.0",
     "keytar": "^7.9.0",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.5.2",
+    "morgan": "^1.10.0",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0",
+    "sqlite3": "^5.1.7",
+    "tslib": "^2.6.3",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
@@ -65,6 +76,7 @@
     "@typescript-eslint/parser": "^6.0.0",
     "electron": "^30.0.2",
     "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.1",

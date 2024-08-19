@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { TopBarComponent } from './topbar.component';
+import { CallAPIComponent } from './call-api.component';
 
-describe('TopBarComponent', () => {
-  let component: TopBarComponent;
-  let fixture: ComponentFixture<TopBarComponent>;
+describe('CallAPIComponent', () => {
+  let component: CallAPIComponent;
+  let fixture: ComponentFixture<CallAPIComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TopBarComponent ],
+      declarations: [ CallAPIComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TopBarComponent);
+    fixture = TestBed.createComponent(CallAPIComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

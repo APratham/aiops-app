@@ -1,12 +1,71 @@
+ /* ------------------ Electron Main Process ------------------ 
+ *                              __
+ *    ____     ____          __/ /_ __        __
+ *   / _  \   / __ \________/_   _// /_  ____/ /.-..-.
+ *  / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
+ * /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
+ *
+ * ----------------------------------------------------------
+ * 
+ * Antariksh Pratham, N1191635
+ * Major Project appplication
+ * Masters in Cloud Computing, Nottingham Trent University
+ * ----------------------------------------------------------
+ * 
+ * This file is the main process of the Electron application and
+ * manages the entire application lifecycle. It creates the main
+ * window, handles authentication, and communicates with the 
+ * FastAPI backend for different tasks.
+ * ----------------------------------------------------------
+ * 
+ * Electron Main Process: main.js
+ * Ionic/Angular Frontend: index.html
+ * Angular AppModule: src/app/app.module.ts
+ * Express Server: express.js
+ * FastAPI Backend: backend/main.py
+ * ----------------------------------------------------------
+ * 
+ * GNU Affero General Public License v3 (AGPLv3)
+ * 
+ * This software is licensed under the GNU Affero General Public 
+ * License version 3 (AGPLv3). By using or modifying this software, 
+ * you agree to the following terms:
+ * 
+ * 1. Source Code Availability: You must provide access to the complete
+ *   source code of any modified version of this software when it is
+ *  used to provide a service over a network. This obligation extends
+ *  to the source code of the software itself and any derivative works.
+ * 
+ * 2. Copyleft: Any distribution of this software or derivative works
+ * must be licensed under the AGPLv3. You may not impose any additional
+ * restrictions beyond those contained in this license.
+ * 
+ * 3. Disclaimer of Warranty: This software is provided "as-is," without
+ * any warranty of any kind, express or implied, including but not 
+ * limited to the warranties of merchantability or fitness for a 
+ * particular purpose.
+ * 
+ * For the full terms of the AGPLv3, please refer to the full license 
+ * text available at https://www.gnu.org/licenses/agpl-3.0.html.
+ * ----------------------------------------------------------
+*/
+
 const { app, BrowserWindow, ipcMain, protocol } = require('electron');
 const { OAuth2Client } = require('google-auth-library');
 const { GOOGLE_OAUTH_CLIENT, MICROSOFT_OAUTH_CLIENT } = require('./secrets');
 const msal = require('@azure/msal-node');
 const crypto = require('crypto');
 const keytar = require('keytar');
+const Store = require('electron-store');
 const fetch = require('node-fetch');
 const URL = require('url').URL;
 const path = require('path');
+
+const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
+const { checkAndRefreshGoogleToken } = require('./tokenManager');
+const { setupApiManager } = require('./apiManager');
+const { ipcManager } = require('./ipcManager');
+const dal = require('./data-layer/dal');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
 const GOOGLE_ACCOUNT_NAME = 'google-oauth-token';
@@ -14,12 +73,30 @@ const GOOGLE_UNIQUE_ID_KEY = 'google-unique-id';
 const MS_ACCOUNT_NAME = 'ms-oauth-token';
 const MS_UNIQUE_ID_KEY = 'ms-unique-id';
 
+// Store the base URL in a variable
+const BASE_URL = 'http://localhost:3000';
+const store = new Store();
+
 let mainWindow;
 let authWindow;
 let splashWindow;
 
-// Store the base URL in a variable
-const BASE_URL = 'http://localhost:3000';
+ipcMain.on('get-user-info', (event) => {
+  const userInfo = store.get('userInfo', null);
+  //console.log(store.path);
+  //console.log(store.store);
+  event.returnValue = userInfo; // Send the stored user info back to Angular
+});
+
+ipcMain.on('save-user-info', (event, userInfo) => {
+  store.set('userInfo', userInfo);
+  event.returnValue = true; // Confirm the data was saved successfully
+});
+
+ipcMain.on('get-profile-pic', (event) => {
+  const profilePic = dal.getProfilePicFromStore();
+  event.returnValue = profilePic;
+});
 
 app.on('ready', async () => {
   protocol.registerHttpProtocol('msal', (request, callback) => {
@@ -55,6 +132,8 @@ app.on('ready', async () => {
     await createMainWindow();
     splashWindow.close();
   }, 5000); // Show splash screen for 5 seconds
+
+  ipcManager();
 });
 
 async function createMainWindow() {
@@ -68,7 +147,7 @@ async function createMainWindow() {
     },
   });
 
-  mainWindow.webContents.once('did-finish-load', () => {
+  mainWindow.webContents.once('did-finish-load', () => { // Ensure this function is asyn
     if (process.env.NODE_ENV === 'development') {
       mainWindow.webContents.openDevTools(); // Open DevTools in development mode
     }
@@ -103,14 +182,42 @@ async function createMainWindow() {
     if (googleTokens || msTokens) {
       console.log('Tokens found, loading dashboard...');
       mainWindow.loadURL(`${BASE_URL}/dashboard`);
-      mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow.webContents.once('did-finish-load', async () => {
         // Handle tokens if they exist
         if (googleTokens) {
           const tokens = JSON.parse(googleTokens);
           mainWindow.webContents.send('auth-success', { tokens, uniqueId: googleUniqueId });
+      
+          // Initial token check and setup
+          await checkAndRefreshGoogleToken(tokens);
           validateGoogleToken(tokens).then(isValid => {
-            mainWindow.webContents.send('token-validity', isValid);
+              mainWindow.webContents.send('token-validity', isValid);
+      
+              if (isValid) {
+                  console.log('Token validation successful');
+              } else {
+                  console.error('Token validation failed');
+              }
           });
+      
+          // Periodically refresh token and revalidate it every 15 minutes
+          setInterval(async () => {
+              await checkAndRefreshGoogleToken(tokens);
+              
+              validateGoogleToken(tokens).then(isValid => {
+                  mainWindow.webContents.send('token-validity', isValid);
+      
+                  if (isValid) {
+                      console.log('Writing token to store... ', tokens);
+                      store.set('googleTokens', tokens);
+                      console.log('Tokens refreshed successfully');
+                  } else {
+                      console.error('Unable to refresh tokens');
+                  }
+              });
+          }, 15 * 60 * 1000);
+      
+      
         } else if (msTokens) {
           const { tokens, account } = JSON.parse(msTokens);
           mainWindow.webContents.send('auth-success', { tokens, uniqueId: msUniqueId });
@@ -144,6 +251,7 @@ async function createMainWindow() {
       keytar.deletePassword(SERVICE_NAME, GOOGLE_UNIQUE_ID_KEY),
       keytar.deletePassword(SERVICE_NAME, MS_ACCOUNT_NAME),
       keytar.deletePassword(SERVICE_NAME, MS_UNIQUE_ID_KEY),
+      store.delete('userInfo'),
     ]);
     mainWindow.webContents.send('logout-success');
     console.log('Stored tokens cleared');
@@ -166,8 +274,15 @@ const startGoogleAuth = async (mainWindow) => {
   const code = await getOAuthCodeByInteraction(authWindow, url);
   const response = await client.getToken(code);
   const uniqueId = crypto.randomUUID();
+
   await keytar.setPassword(SERVICE_NAME, GOOGLE_ACCOUNT_NAME, JSON.stringify(response.tokens));
   await keytar.setPassword(SERVICE_NAME, GOOGLE_UNIQUE_ID_KEY, uniqueId);
+
+  console.log('Google Auth Success:', response.tokens);
+  console.log('Writing tokens to store... ', response.tokens);
+
+  store.set('googleTokens', response.tokens);
+
   mainWindow.webContents.send('auth-success', { tokens: response.tokens, uniqueId });
 
   const isValid = await validateGoogleToken(response.tokens);
@@ -289,12 +404,20 @@ const handleURLChange = (url, interactionWindow, resolve, reject, onclosed) => {
 const validateGoogleToken = async (tokens) => {
   const client = new OAuth2Client();
   client.setCredentials(tokens);
+
   try {
     const res = await client.request({
       url: 'https://www.googleapis.com/oauth2/v3/userinfo',
     });
-    console.log('User Info:', res.data); // Log the user info to verify
-    mainWindow.webContents.send('user-info', res.data);
+    const userInfo = res.data;
+    console.log('User Info:', userInfo);
+
+    // Cache user info which will also save profile picture in Electron Store
+    await cacheUserInfo(userInfo);
+
+    // Send user info to Angular frontend
+    mainWindow.webContents.send('user-info', userInfo);
+
     return true;
   } catch (error) {
     console.error('Token validation failed:', error);
@@ -320,7 +443,12 @@ const validateMsToken = async (accessToken) => {
 
     const userInfo = await response.json();
     console.log('User Info:', userInfo); // Log the user info to verify
-    mainWindow.webContents.send('user-info', res.data);
+
+    // Store user info in MongoDB and cache in SQLite
+    await storeUserInfo(userInfo);
+    cacheUserInfo(userInfo);
+
+    mainWindow.webContents.send('user-info', userInfo);
     return true;
   } catch (error) {
     console.error('Token validation error:', error);
@@ -331,3 +459,6 @@ const validateMsToken = async (accessToken) => {
 app.on('window-all-closed', () => {
   app.quit();
 });
+
+module.exports = { validateGoogleToken };
+
