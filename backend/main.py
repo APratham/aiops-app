@@ -1,16 +1,12 @@
 from fastapi import FastAPI, Depends, HTTPException, Header, status
 from fastapi.responses import JSONResponse
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from pydantic import BaseModel
-from google.auth import jwt
 from google.auth.transport import requests
-from pydantic_models import *
-from fastapi.middleware.cors import CORSMiddleware
+
+from models.pydantic import *
 from typing import Optional
 from middleware import CORSConfig
-import requests
-import json
+import uvicorn 
 import os
 import logging
 
