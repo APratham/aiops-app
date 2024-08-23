@@ -51,6 +51,11 @@ app.use('/api', createProxyMiddleware({
 
 app.use('/dal', dalRoutes); // All DAL-related routes are prefixed with /dal
 
+// Health check route
+app.get('/status', (req, res) => {
+  res.json({ status: 'ok', service: 'Express Server', port: port });
+});
+
 // Catch-all route to serve the Angular app
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'www', 'index.html'));

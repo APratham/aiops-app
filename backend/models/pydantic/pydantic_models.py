@@ -1,9 +1,6 @@
 # models.py
 from pydantic import BaseModel
 
-class Item(BaseModel):
-    data: str
-
 class User(BaseModel):
     sub: str 
     name: str 
@@ -13,4 +10,12 @@ class User(BaseModel):
 
 class UserInfo(BaseModel):
     user_email: str
-    message: str    
+    message: str   
+
+class StatusResponse(BaseModel):
+    status: str
+    service: str
+    port: int 
+
+class MessageResponse(BaseModel):
+    message: str       

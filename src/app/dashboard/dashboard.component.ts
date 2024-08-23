@@ -15,7 +15,7 @@ interface ApiResponse {
 export class DashboardComponent implements OnInit {
 
   ipcRenderer = (window as any).electron.ipcRenderer;
-  accessToken: string | null = null;
+  idToken: string | null = null;
 
 
   constructor(private http: HttpClient) { }
@@ -26,9 +26,9 @@ export class DashboardComponent implements OnInit {
 
     // Fetch the value from electron-store
     this.getStoreValue('googleTokens').then((value) => {
-      if (value && value.access_token) {
-        this.accessToken = value.access_token;
-        console.log('Access token:', this.accessToken);
+      if (value && value.id_token) {
+        this.idToken = value.id_token;
+        console.log('Access token:', this.idToken);
       } else {
         console.warn('No access token found in googleTokens');
       }
@@ -36,12 +36,12 @@ export class DashboardComponent implements OnInit {
 
     // Setup API call with the token
     callApiButton?.addEventListener('click', () => {
-      if (this.accessToken) {
+      if (this.idToken) {
         const headers = new HttpHeaders({
-          'Authorization': `Bearer ${this.accessToken}`
+          'Authorization': `Bearer ${this.idToken}`
         });
 
-        this.http.get<ApiResponse>('http://localhost:3000/api/test-endpoint', { headers })
+        this.http.get<ApiResponse>('http://localhost:3000/api/protected-endpoint', { headers })
           .subscribe({
             next: (response) => {
               console.log('API response:', response);
