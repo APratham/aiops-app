@@ -1,5 +1,6 @@
 # models.py
 from pydantic import BaseModel
+from typing import Optional
 
 class User(BaseModel):
     sub: str 
@@ -18,4 +19,8 @@ class StatusResponse(BaseModel):
     port: int 
 
 class MessageResponse(BaseModel):
-    message: str       
+    message: str    
+    
+class MessageResponseWithUser(BaseModel):
+    message: str        
+    user_name: Optional[str]

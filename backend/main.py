@@ -36,13 +36,16 @@ async def verify_google_oauth_token(authorization: Optional[str] = Header(None))
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
 
 # Protected endpoint that depends on token verification
-@app.get("/protected-endpoint")
+@app.get("/protected-endpoint", response_model=MessageResponseWithUser) # Change to MessageResponse once all endpoints are protected
 async def protected_endpoint(idinfo: dict = Depends(verify_google_oauth_token)):
     response_data = {
         "message": "This is a protected endpoint",
-        "user_name": idinfo['name']
+        "user_name": idinfo['name']  # Extra field
     }
-    return JSONResponse(content=response_data) 
+
+    validated_data = MessageResponseWithUser(**response_data).dict() # Force validation
+    
+    return validated_data
 
 @app.get("/test-endpoint", response_model=MessageResponse)
 async def test_endpoint():
