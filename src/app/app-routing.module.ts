@@ -3,6 +3,12 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SettingsComponent } from './settings/settings.component';
+import { AccountComponent } from './settings/account/account.component';
+import { ApplicationComponent } from './settings/application/application.component';
+import { ThemeComponent } from './settings/theme/theme.component';
+
+
 import { AuthGuard } from './auth.guard';  // Import the AuthGuard
 import { NotFoundGuard } from './not-found.guard'; 
 
@@ -21,6 +27,29 @@ const routes: Routes = [
     component: DashboardComponent,
     data: { title: 'Dashboard' },
     canActivate: [AuthGuard]  // Protect the dashboard route with the AuthGuard
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    data: { title: 'Settings' },
+    canActivate: [AuthGuard],  // Protect the settings route with the AuthGuard
+    children: [
+      {
+        path: 'account',
+        component: AccountComponent,
+        data: { title: 'Account' },
+      },
+      {
+        path: 'application',
+        component: ApplicationComponent,
+        data: { title: 'Application' }, 
+      },
+      {
+        path: 'theme',
+        component: ThemeComponent,
+        data: { title: 'Theme'},
+      }  
+    ]
   },
   {
     path: '',

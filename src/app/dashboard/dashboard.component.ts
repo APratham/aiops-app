@@ -43,10 +43,10 @@ export class DashboardComponent implements OnInit {
 
         this.http.get<ApiResponse>('http://localhost:3000/api/protected-endpoint', { headers })
           .subscribe({
-            next: (response) => {
+            next: (response: any) => {
               console.log('API response:', response);
             },
-            error: (error) => {
+            error: (error: any) => {
               console.error('API error:', error);
             }
           });

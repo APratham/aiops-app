@@ -1,0 +1,37 @@
+<!-- settings.component.html -->
+<ion-header>
+  <ion-toolbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-split-pane contentId="settingsContent">
+    <ion-menu contentId="settingsContent">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Settings</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerLink="/settings/application" routerDirection="root">
+              <ion-label>Application</ion-label>
+            </ion-item>
+            <ion-item routerLink="/settings/account" routerDirection="root">
+              <ion-label>Account</ion-label>
+            </ion-item>
+            <ion-item routerLink="/settings/theme" routerDirection="root">
+              <ion-label>Theme</ion-label>
+            </ion-item>
+            <!-- Add more menu items here -->
+          </ion-menu-toggle>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+    <div id="settingsContent" class="ion-page">
+      <router-outlet></router-outlet>
+    </div>
+  </ion-split-pane>
+</ion-content>
