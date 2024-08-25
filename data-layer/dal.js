@@ -1,201 +1,136 @@
-const mongoose = require('mongoose');
-const sqlite3 = require('sqlite3').verbose();
-const UserModel = require('../backend/models/user.model'); // MongoDB model
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
-const Store = require('electron-store');
-const store = new Store();
+const sqliteDb = require('./sqliteDb'); // Assume this is your SQLite database connection
+const UserModel = require('../models/user.model'); // MongoDB model for users
 
+async function createData(collection, data, sqliteTable) {
+  try {
+    // MongoDB insert operation
+    const Model = getMongoModel(collection);
+    const newData = new Model(data);
+    await newData.save();
 
-const uri = process.env.MONGODB_URI;
+    // Cache in SQLite
+    await cacheData(sqliteTable, data);
 
-(async () => {
-    try {
-      await connectMongoDB(uri);
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
-  })();
+    // Log the change
+    await logChange(collection, 'create', JSON.stringify(data));
 
-// Initialize SQLite connection
-const sqliteDb = new sqlite3.Database('./local_database.sqlite', (err) => {
-  if (err) {
-    console.error('Error opening SQLite database:', err.message);
-  } else {
-    console.log('Connected to SQLite database.');
+    return newData;
+  } catch (error) {
+    console.error(`Error creating data in ${collection}:`, error);
+    throw error;
   }
-});
+}
 
-// Initialize SQLite schema if it doesn't exist
-sqliteDb.serialize(() => {
-  sqliteDb.run(`
-    CREATE TABLE IF NOT EXISTS user_info (
-      sub TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      given_name TEXT NOT NULL,
-      family_name TEXT NOT NULL,
-      picture TEXT NOT NULL
-    );
-  `, (err) => {
-    if (err) {
-      console.error('Error creating table:', err.message);
+async function readData(collection, query, sqliteTable) {
+  try {
+    // SQLite read operation
+    const cachedData = await getCachedData(sqliteTable, query.sub);
+    if (cachedData) {
+      console.log(`Data found in SQLite cache for ${collection}`);
+      return cachedData;
+    }
+
+    // MongoDB read operation
+    const Model = getMongoModel(collection);
+    const dataFromMongo = await Model.findOne(query);
+    if (dataFromMongo) {
+      console.log(`Data found in MongoDB for ${collection}, caching in SQLite`);
+      await cacheData(sqliteTable, dataFromMongo);
+      return dataFromMongo;
     } else {
-      console.log('User_info table created or already exists.');
+      console.log(`Data not found in MongoDB for ${collection}`);
+      return null;
+    }
+  } catch (error) {
+    console.error(`Error reading data from ${collection}:`, error);
+    return null;
+  }
+}
+
+async function updateData(collection, query, updateData, sqliteTable) {
+  try {
+    // MongoDB update operation
+    const Model = getMongoModel(collection);
+    const updatedData = await Model.findOneAndUpdate(query, updateData, { new: true, upsert: true });
+
+    // Update SQLite cache
+    await cacheData(sqliteTable, updatedData);
+
+    // Log the change
+    await logChange(collection, 'update', JSON.stringify(updateData));
+
+    return updatedData;
+  } catch (error) {
+    console.error(`Error updating data in ${collection}:`, error);
+    throw error;
+  }
+}
+
+async function deleteData(collection, query, sqliteTable) {
+  try {
+    // MongoDB delete operation
+    const Model = getMongoModel(collection);
+    await Model.deleteOne(query);
+
+    // Delete from SQLite cache
+    const stmt = sqliteDb.prepare(`DELETE FROM ${sqliteTable} WHERE sub = ?`);
+    stmt.run(query.sub, (err) => {
+      if (err) {
+        console.error(`Error deleting from SQLite ${sqliteTable}:`, err.message);
+      } else {
+        console.log(`Data deleted from SQLite cache for ${collection}`);
+      }
+    });
+
+    // Log the deletion
+    await logChange(collection, 'delete', `Deleted entry with query: ${JSON.stringify(query)}`);
+  } catch (error) {
+    console.error(`Error deleting data from ${collection}:`, error);
+    throw error;
+  }
+}
+
+// Utility functions
+
+function getMongoModel(collection) {
+  if (collection === 'user') return UserModel;
+  // Add more cases here for other collections if needed
+  throw new Error(`Unknown collection: ${collection}`);
+}
+
+async function cacheData(sqliteTable, data) {
+  const stmt = sqliteDb.prepare(`
+    INSERT OR REPLACE INTO ${sqliteTable} (sub, name, given_name, family_name, picture)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+  stmt.run(data.sub, data.name, data.given_name, data.family_name, data.picture, (err) => {
+    if (err) {
+      console.error(`Error caching data in SQLite ${sqliteTable}:`, err.message);
+    } else {
+      console.log(`Data cached in SQLite ${sqliteTable}`);
     }
   });
-});
+}
 
-// Connect to MongoDB with retry logic
-async function connectMongoDB(uri, retries = 5) {
-    for (let i = 0; i < retries; i++) {
-      try {
-        await mongoose.connect(uri, {
-          connectTimeoutMS: 30000, // Increase timeout to 30 seconds
-          serverSelectionTimeoutMS: 30000, // Increase server selection timeout
-        });
-        console.log('Connected to MongoDB');
-        return; // Exit if successful
-      } catch (error) {
-        console.error(`Error connecting to MongoDB (attempt ${i + 1} of ${retries}):`, error);
-  
-        if (i === retries - 1) {
-          console.error('All retry attempts failed.');
-          throw error; // Re-throw the error after the last attempt
-        }
-  
-        console.log(`Retrying in 5 seconds...`);
-        await new Promise(res => setTimeout(res, 5000)); // Wait for 5 seconds before retrying
-      }
-    }
-  }
-  
-
-// Ensure the profile_pictures directory exists
-function ensureDirectoryExists(directory) {
-    if (!fs.existsSync(directory)) {
-      fs.mkdirSync(directory, { recursive: true });
-      console.log(`Directory '${directory}' created.`);
-    }
-  }
-  
-  // Download profile picture and save it locally
-  async function downloadProfilePicture(url, sub) {
-    try {
-      const profilePicturesDir = path.resolve(__dirname, 'profile_pictures');
-      ensureDirectoryExists(profilePicturesDir);
-  
-      const picturePath = path.join(profilePicturesDir, `${sub}.jpg`);
-      const response = await axios({
-        url,
-        responseType: 'stream',
-      });
-  
-      const writer = fs.createWriteStream(picturePath);
-  
-      response.data.pipe(writer);
-  
-      return new Promise((resolve, reject) => {
-        writer.on('finish', () => resolve(picturePath));
-        writer.on('error', reject);
-      });
-    } catch (error) {
-      console.error('Error downloading profile picture:', error);
-      throw error;
-    }
-  }
-
-// Cache user info in SQLite and optionally in MongoDB
-async function cacheUserInfo(userInfo, shouldSaveToMongoDB = false) {
-    const userInSQLite = await getCachedUserInfo(userInfo.sub);
-  
-    if (userInSQLite) {
-      console.log('User already exists in the database.');
+async function logChange(collection, changeType, details) {
+  const stmt = sqliteDb.prepare(`
+    INSERT INTO change_log (collection, change_type, details)
+    VALUES (?, ?, ?)
+  `);
+  stmt.run(collection, changeType, details, (err) => {
+    if (err) {
+      console.error(`Error logging change in ${collection}:`, err.message);
     } else {
-      try {
-        // Download the profile picture
-        const picturePath = await downloadProfilePicture(userInfo.picture, userInfo.sub);
-  
-        // Save to Electron Store
-        store.set('profilePic', picturePath);
-  
-        sqliteDb.serialize(() => {
-          const stmt = sqliteDb.prepare(`
-            INSERT INTO user_info (sub, name, given_name, family_name, picture)
-            VALUES (?, ?, ?, ?, ?)
-          `);
-          stmt.run(userInfo.sub, userInfo.name, userInfo.given_name, userInfo.family_name, picturePath, (err) => {
-            if (err) {
-              console.error('Error caching user info in SQLite:', err.message);
-            } else {
-              console.log('User info cached in SQLite');
-            }
-          });
-          stmt.finalize();
-        });
-  
-        if (shouldSaveToMongoDB) {
-          await storeUserInfo(userInfo);
-        }
-      } catch (error) {
-        console.error('Error in caching user info:', error);
-      }
+      console.log(`Change logged for ${collection}`);
     }
-  }
-  
-  // Retrieve cached profile picture from Electron Store
-  function getProfilePicFromStore() {
-    return store.get('profilePic'); // Returns undefined if the key doesn't exist
-  }
+  });
+}
 
-async function storeUserInfo(userInfo, retries = 5) {
-    if (mongoose.connection.readyState !== 1) { // 1 means connected
-      throw new Error('Mongoose is not connected to MongoDB');
-    }
-  
-    for (let i = 0; i < retries; i++) {
-      try {
-        const existingUser = await UserModel.findOne({ sub: userInfo.sub });
-  
-        if (existingUser) {
-          console.log('User already exists in MongoDB');
-          return; // Exit early if the user already exists
-        }
-  
-        const user = new UserModel(userInfo);
-        await user.save();
-        console.log('User info stored in MongoDB');
-        return; // Exit after successfully storing the user info
-  
-      } catch (error) {
-        if (error.name === 'MongoNetworkError' || error.name === 'MongooseError') {
-          console.error(`Error storing user info in MongoDB (attempt ${i + 1} of ${retries}):`, error);
-  
-          if (i === retries - 1) {
-            console.error('All retry attempts failed.');
-            throw error; // Re-throw the error after the last attempt
-          }
-  
-          console.log(`Retrying in 5 seconds...`);
-          await new Promise(res => setTimeout(res, 5000)); // Wait for 5 seconds before retrying
-        } else {
-          console.error('An unexpected error occurred:', error);
-          throw error;
-        }
-      }
-    }
-  }
-  
-  
-  
-
-// Retrieve cached user info from SQLite
-function getCachedUserInfo(sub) {
+async function getCachedData(sqliteTable, sub) {
   return new Promise((resolve, reject) => {
-    sqliteDb.get('SELECT * FROM user_info WHERE sub = ?', [sub], (err, row) => {
+    sqliteDb.get(`SELECT * FROM ${sqliteTable} WHERE sub = ?`, [sub], (err, row) => {
       if (err) {
-        console.error('Error retrieving user info from SQLite:', err.message);
+        console.error(`Error retrieving cached data from ${sqliteTable}:`, err.message);
         reject(err);
       } else {
         resolve(row);
@@ -204,28 +139,12 @@ function getCachedUserInfo(sub) {
   });
 }
 
-// Periodic backup to MongoDB
-async function backupToMongoDB() {
-  sqliteDb.all('SELECT * FROM user_info', async (err, rows) => {
-    if (err) {
-      console.error('Error fetching data from SQLite for backup:', err.message);
-      return;
-    }
-    for (const row of rows) {
-      await storeUserInfo(row);
-    }
-    console.log('Backup to MongoDB completed.');
-  });
-}
-
-// Call this function periodically to backup SQLite data to MongoDB
-setInterval(backupToMongoDB, 259200000); // Backup every hour
-
 module.exports = {
-  connectMongoDB,
-  storeUserInfo,
-  cacheUserInfo,
-  getCachedUserInfo,
-  getCachedUserInfo,
-  getProfilePicFromStore,
+  createData,
+  readData,
+  updateData,
+  deleteData,
+  cacheData,
+  getCachedData,
+  logChange,
 };

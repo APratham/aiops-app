@@ -61,7 +61,7 @@ const fetch = require('node-fetch');
 const URL = require('url').URL;
 const path = require('path');
 
-const { connectMongoDB, storeUserInfo, cacheUserInfo } = require('./data-layer/dal');
+const { cacheUserInfo } = require('./data-layer/dbOperations'); // Adjust path as necessary
 const { checkAndRefreshGoogleToken } = require('./tokenManager');
 const { setupApiManager } = require('./apiManager');
 const { ipcManager } = require('./ipcManager');
@@ -94,7 +94,7 @@ ipcMain.on('save-user-info', (event, userInfo) => {
 });
 
 ipcMain.on('get-profile-pic', (event) => {
-  const profilePic = dal.getProfilePicFromStore();
+  const profilePic = store.get('userInfo.profilePic', 'googleTokens');
   event.returnValue = profilePic;
 });
 
