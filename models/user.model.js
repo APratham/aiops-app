@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('debug', true);
+
 const UserSchema = new mongoose.Schema({
   sub: { type: String, required: true, unique: true },
   name: { type: String, required: true },

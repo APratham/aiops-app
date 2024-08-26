@@ -1,0 +1,30 @@
+ion-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items vertically in the center */
+    align-items: center; /* Align items horizontally in the center */
+    height: 100%;
+  }
+  
+  ion-list {
+    width: 100%; /* Ensure the list takes full width */
+  }
+  
+  ion-item {
+    width: 100%; /* Ensure the item takes full width */
+  }
+  
+  :host {
+    display: block;
+    height: 100%;
+  }
+
+
+  
+  /* For the content area title */
+  ion-toolbar ion-title {
+    font-size: 1.2rem;
+    color: #000;
+  }
+  
+  

@@ -31,6 +31,21 @@ sqliteDb.serialize(() => {
     }
   });
 
+  // Create user_settings table if it doesn't exist
+  sqliteDb.run(`
+    CREATE TABLE IF NOT EXISTS user_settings (
+      sub TEXT PRIMARY KEY,
+      theme TEXT NOT NULL,
+      FOREIGN KEY(sub) REFERENCES user_info(sub) ON DELETE CASCADE
+    );
+  `, (err) => {
+    if (err) {
+      console.error('Error creating user_settings table:', err.message);
+    } else {
+      console.log('User_settings table created or already exists.');
+    }
+  });
+
   // Create change_log table if it doesn't exist
   sqliteDb.run(`
     CREATE TABLE IF NOT EXISTS change_log (

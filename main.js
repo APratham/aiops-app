@@ -262,7 +262,10 @@ async function createMainWindow() {
 const startGoogleAuth = async (mainWindow) => {
   const client = initGoogleOAuthClient();
   const url = client.generateAuthUrl({
-    scope: ['https://www.googleapis.com/auth/userinfo.profile'],
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email'     // For user's email address
+    ],
   });
   const authWindow = new BrowserWindow({ x: 60, y: 60, useContentSize: true });
   authWindow.loadURL(url);

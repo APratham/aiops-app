@@ -30,10 +30,31 @@ async function cacheUserInfo(userInfo) {
   }
 }
 
+async function saveUserSettings(sub, settings) {
+  console.log(`Saving settings for user: ${sub} with data:`, settings);
+  const query = { sub };  // The query to find the settings by user ID (sub)
+  console.log('MongoDB query:', query);
+  return await updateData('settings', query, settings, 'user_settings');
+}
+
+async function fetchUserSettings(sub) {
+  const query = { sub };
+  return await readData('settings', query, 'user_settings');
+}
+
+async function deleteUserSettings(sub) {
+  const query = { sub };
+  return await deleteData('user_settings', query, 'user_settings');
+}
+
 module.exports = {
+  updateData,
   createUserInfo,
   getUserInfo,
   updateUserInfo,
   deleteUserInfo,
-  cacheUserInfo
+  cacheUserInfo,
+  saveUserSettings,
+  fetchUserSettings,
+  deleteUserSettings,
 };
