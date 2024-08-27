@@ -18,10 +18,11 @@ import { ApplicationComponent } from './settings/application/application.compone
 import { ThemeComponent } from './settings/theme/theme.component';
 
 import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
+import { DockerInfoPopoverComponent } from './settings/application/docker-info-popover/docker-info-popover.component';
 
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent],
+  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, DockerInfoPopoverComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IonToggle } from '@ionic/angular';
+import { IonToggle, PopoverController } from '@ionic/angular';
+
+import { DockerInfoPopoverComponent } from './docker-info-popover/docker-info-popover.component'; 
 
 @Component({
   selector: 'app-application',
@@ -10,6 +12,7 @@ import { IonToggle } from '@ionic/angular';
 export class ApplicationComponent implements OnInit, AfterViewInit {
   @ViewChild('ionDockerToggle') ionDockerToggle!: IonToggle;
   @ViewChild('ionNotificationToggle') ionNotificationToggle!: IonToggle;
+
   ipcRenderer = (window as any).electron.ipcRenderer;
   userSub: string | null = null;
 
@@ -18,7 +21,7 @@ export class ApplicationComponent implements OnInit, AfterViewInit {
     docker: '1',
   };
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef, private popoverController: PopoverController) {}
 
   async ngOnInit() {
     const userInfo = await this.getStoreValue('userInfo');
@@ -41,6 +44,15 @@ export class ApplicationComponent implements OnInit, AfterViewInit {
     this.settings[type] = event.detail.checked ? '1' : '0'; // Convert boolean to '1' or '0'
     console.log('New settings:', this.settings);
     this.saveSettings();
+  }
+
+  async presentPopover(event: Event) {
+    const popover = await this.popoverController.create({
+      component: DockerInfoPopoverComponent,
+      event,
+      translucent: true,
+    });
+    return await popover.present();
   }
 
   async fetchSettings() {
