@@ -40,17 +40,24 @@ router.post('/saveUserSettings', async (req, res) => {
   console.log('Received payload:', req.body); // Log the payload received
   try {
     const { sub, settings } = req.body;
-    const updateDataPayload = { theme: settings.theme }; // Structure updateData correctly
+    const updateDataPayload = {};
+
+    // Add fields to updateDataPayload only if they are defined
+    if (settings.theme !== undefined) updateDataPayload.theme = settings.theme;
+    if (settings.docker !== undefined) updateDataPayload.docker = settings.docker;
+    if (settings.notifications !== undefined) updateDataPayload.notifications = settings.notifications;
+
+    console.log('Update Data Payload:', updateDataPayload); // Log the constructed payload
 
     await updateData('settings', { sub }, updateDataPayload, 'user_settings'); // Correctly call updateData
 
-    console.log('MongoDB updateData:', updateDataPayload);
     res.status(200).send('User settings saved successfully');
   } catch (error) {
     console.error('Failed to save user settings:', error);
     res.status(500).send('Failed to save user settings');
   }
 });
+
 
 
 router.get('/getUserSettings/:sub', async (req, res) => {

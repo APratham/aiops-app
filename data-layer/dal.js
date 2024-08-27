@@ -83,7 +83,12 @@ async function readData(collection, query, sqliteTable) {
 async function updateData(collection, query, updateData, sqliteTable) {
   try {
     if (updateData) {
-      const mongoUpdateData = { $set: { 'settings.theme': updateData.theme } };
+      // Build MongoDB update object dynamically
+      const mongoUpdateData = { $set: {} };
+      if (updateData.theme !== undefined) mongoUpdateData.$set['settings.theme'] = updateData.theme;
+      if (updateData.docker !== undefined) mongoUpdateData.$set['settings.docker'] = updateData.docker;
+      if (updateData.notifications !== undefined) mongoUpdateData.$set['settings.notifications'] = updateData.notifications;
+
       const Model = getMongoModel(collection);
 
       console.log('MongoDB model:', Model);
@@ -95,8 +100,12 @@ async function updateData(collection, query, updateData, sqliteTable) {
 
       const sqliteUpdateData = {
         sub: updatedData.sub,
-        theme: updatedData.settings.theme
       };
+
+      // Only add sqlite fields that are relevant and exist in updatedData
+      if (updatedData.settings.theme !== undefined) sqliteUpdateData.theme = updatedData.settings.theme;
+      if (updatedData.settings.docker !== undefined) sqliteUpdateData.docker = updatedData.settings.docker;
+      if (updatedData.settings.notifications !== undefined) sqliteUpdateData.notifications = updatedData.settings.notifications;
 
       await cacheData(sqliteTable, sqliteUpdateData);
 
@@ -112,6 +121,7 @@ async function updateData(collection, query, updateData, sqliteTable) {
     throw error;
   }
 }
+
 
 
 

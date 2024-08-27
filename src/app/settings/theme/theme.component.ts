@@ -24,21 +24,20 @@ export class ThemeComponent implements OnInit {
 
   async ngOnInit() {
     
-    
-    // Fetch the user info from electron-store
-    const userInfo = await this.getStoreValue('userInfo');
+        const userInfo = await this.getStoreValue('userInfo');
     if (userInfo && userInfo.sub) {
       this.userSub = userInfo.sub;
       console.log('User sub:', this.userSub);
-      // Fetch the saved settings for this user from the backend
+
       this.fetchSettings();
       console.log('Fetched settings:', this.settings);
     }
   }
 
   ngAfterViewInit() {
-    // Ensure that ionSelect is available after the view is initialized
-    this.cdr.detectChanges();
+
+    // Ensure that ionSelect is available after the view is initialized by using ChangeDetectorRef
+    this.cdr.detectChanges(); 
   }
 
   onThemeChange(event: any) {

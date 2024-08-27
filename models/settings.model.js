@@ -7,6 +7,8 @@ const SettingsSchema = new mongoose.Schema({
     sub: { type: String, required: true, unique: true }, // Reference to the User model
     settings: {
         theme: { type: String, required: true },
+        notifications: { type: Number, required: true },
+        docker: { type: Number, required: true },
       },
 });
 
