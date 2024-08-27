@@ -50,22 +50,25 @@
  * ----------------------------------------------------------
 */
 
-const { app, BrowserWindow, ipcMain, protocol } = require('electron');
+const { app, BrowserWindow, ipcMain, protocol, dialog } = require('electron');
 const { OAuth2Client } = require('google-auth-library');
 const { GOOGLE_OAUTH_CLIENT, MICROSOFT_OAUTH_CLIENT } = require('./secrets');
 const msal = require('@azure/msal-node');
 const crypto = require('crypto');
 const keytar = require('keytar');
 const Store = require('electron-store');
+const sqlite3 = require('sqlite3').verbose();
 const fetch = require('node-fetch');
 const URL = require('url').URL;
 const path = require('path');
+const { exec } = require('child_process');
 
 const { cacheUserInfo } = require('./data-layer/dbOperations'); // Adjust path as necessary
 const { checkAndRefreshGoogleToken } = require('./tokenManager');
 const { setupApiManager } = require('./apiManager');
 const { ipcManager } = require('./ipcManager');
 const dal = require('./data-layer/dal');
+const { get } = require('http');
 
 const SERVICE_NAME = 'ElectronOAuthExample';
 const GOOGLE_ACCOUNT_NAME = 'google-oauth-token';
@@ -94,9 +97,177 @@ ipcMain.on('save-user-info', (event, userInfo) => {
 });
 
 ipcMain.on('get-profile-pic', (event) => {
-  const profilePic = store.get('userInfo.profilePic', 'googleTokens');
+  const profilePic = ('userInfo.profilePic', 'googleTokestore.getns');
   event.returnValue = profilePic;
 });
+
+function getSubValue() {
+  const sub = store.get('userInfo.sub', null);
+  console.log('Sub value:', sub);
+  return store.get('sub');
+}
+
+function getDockerSetting() {
+  const sub = store.get('userInfo.sub', null);
+
+  return new Promise((resolve, reject) => {
+      let db = new sqlite3.Database('./data-layer/local_database.sqlite', (err) => {
+          if (err) {
+              console.error('Could not connect to database', err);
+              reject(err);
+          } else {
+              console.log('Connected to database');
+          }
+      });
+
+      db.get("SELECT docker FROM user_settings WHERE sub = ?", [sub], (err, row) => {
+          if (err) {
+              console.error('Error running SQL query', err);
+              reject(err);
+          } else {
+              resolve(row ? row.docker : 0);
+          }
+      });
+
+      db.close((err) => {
+          if (err) {
+              console.error('Error closing the database', err);
+          }
+      });
+  });
+}
+
+function isDockerRunning() {
+  console.log('Checking if Docker is running...');
+  return new Promise((resolve, reject) => {
+      exec('docker run hello-world', (error, stdout, stderr) => {
+          if (error) {
+              console.log('Docker is not running:', error.message);
+              resolve(false);
+          } else {
+              console.log('Docker is running.');
+              resolve(true);
+          }
+      });
+  });
+}
+
+function findDockerExecutable() {
+  console.log('Looking for Docker executable in PATH and common locations...');
+  return new Promise((resolve) => {
+      exec('which docker', (error, stdout) => {
+          if (!error && stdout) {
+              console.log('Docker found in PATH:', stdout.trim());
+              resolve(stdout.trim());
+          } else {
+              console.log('Docker not found in PATH, checking common locations...');
+              // Fallback to check common paths
+              const possiblePaths = [
+                  path.join(process.env['USERPROFILE'], 'AppData\\Local\\Docker\\Docker.exe'),
+                  path.join(process.env['ProgramFiles'], 'Docker\\Docker\\Docker Desktop.exe'),
+                  '/usr/local/bin/docker',
+                  '/usr/bin/docker'
+              ];
+
+              for (const p of possiblePaths) {
+                  if (fs.existsSync(p)) {
+                      console.log('Docker found at:', p);
+                      resolve(p);
+                      return;
+                  }
+              }
+              console.log('Docker not found in any common locations.');
+              resolve(null);
+          }
+      });
+  });
+}
+
+async function attemptToStartDocker() {
+  const dockerExecutable = await findDockerExecutable();
+
+  if (!dockerExecutable) {
+      dialog.showErrorBox('Docker Not Found', 'Docker could not be found on this system. Please install Docker to proceed.');
+      return false;
+  }
+
+  console.log('Attempting to start Docker using executable:', dockerExecutable);
+
+  return new Promise((resolve) => {
+      exec(`${dockerExecutable}`, (error, stdout, stderr) => {
+          if (error) {
+              console.log('Failed to start Docker:', error.message);
+              dialog.showErrorBox('Docker Failed to Start', 'Unable to start Docker. Please start Docker manually.');
+              resolve(false);
+          } else {
+              console.log('Docker started successfully.');
+              resolve(true);
+          }
+      });
+  });
+}
+
+async function waitForDocker() {
+  let dockerRunning = false;
+  const retryInterval = 5000; // Retry every 5 seconds
+  const maxRetries = 12; // Retry for a maximum of 1 minute (12 * 5 seconds)
+
+  for (let i = 0; i < maxRetries; i++) {
+      console.log(`Waiting for Docker... Attempt ${i + 1}/${maxRetries}`);
+      dockerRunning = await isDockerRunning();
+      if (dockerRunning) {
+          break;
+      }
+      await new Promise(resolve => setTimeout(resolve, retryInterval));
+  }
+
+  return dockerRunning;
+}
+
+async function checkAndStartDocker() {
+  const dockerSetting = await getDockerSetting();
+
+  if (dockerSetting === 1) {
+      // Docker on startup is enabled, attempt to start Docker with a warning
+      dialog.showMessageBox({
+          type: 'warning',
+          buttons: ['OK'],
+          title: 'Docker Startup',
+          message: 'The application is attempting to start Docker.',
+      });
+      return await attemptToStartDocker();
+  } else {
+      // Docker on startup is not enabled, ask the user
+      const dockerRunning = await isDockerRunning();
+      if (dockerRunning) {
+          return true;
+      } else {
+          const options = {
+              type: 'question',
+              buttons: ['Start Docker', 'I will start it', 'Cancel'],
+              title: 'Docker Not Running',
+              message: 'Docker is not running. Would you like to start Docker now?',
+          };
+
+          const response = await dialog.showMessageBox(options);
+          if (response.response === 0) { // Start Docker
+              return await attemptToStartDocker();
+          } else if (response.response === 1) { // User will start Docker manually
+              console.log('User chose to start Docker manually.');
+              dialog.showMessageBox({
+                  type: 'info',
+                  buttons: ['OK'],
+                  title: 'Waiting for Docker',
+                  message: 'The application will wait for Docker to start. Please start Docker and the application will continue automatically.',
+              });
+              return await waitForDocker();
+          } else { // Cancel
+              console.log('User cancelled the operation.');
+              return false;
+          }
+      }
+  }
+}
 
 app.on('ready', async () => {
   protocol.registerHttpProtocol('msal', (request, callback) => {
@@ -115,6 +286,7 @@ app.on('ready', async () => {
     mainWindow.setTitle(title);
   });
 
+  // Start the splash screen first
   splashWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -128,6 +300,18 @@ app.on('ready', async () => {
 
   splashWindow.loadFile('splash.html');
 
+  console.log('Starting Docker check...');
+  const dockerStarted = await checkAndStartDocker();
+
+  if (!dockerStarted) {
+      // If Docker did not start, show an error and quit the app
+      dialog.showErrorBox('Docker Required', 'Docker is required to run this application. Please start Docker and restart the application.');
+      splashWindow.close();
+      app.quit();
+      return; // Prevent further execution
+  }
+
+  // If Docker started successfully, proceed to load the main window
   setTimeout(async () => {
     await createMainWindow();
     splashWindow.close();
