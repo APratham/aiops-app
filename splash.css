@@ -6,20 +6,19 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, #4f244c 0%, #702d55 100%);
-    color: #ecf0f1;
     font-family: Arial, sans-serif;
+    color: #ecf0f1;
 }
 
 .container {
     display: flex;
     flex-direction: row;
-    width: 80%;
-    height: 60%;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 20px;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background: linear-gradient(135deg, #702d55 0%, #4f244c 100%); /* Gradient applied to full screen */
+    border-radius: 0; /* Remove border radius */
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: none; /* Remove shadow */
 }
 
 .left-side, .right-side {
@@ -27,63 +26,68 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-
 }
 
 .left-side img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0; /* Remove border radius to fit the entire container */
-}
-
-.splash-image {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 10px;
 }
 
 .right-side {
     flex-direction: column;
-    align-items: flex-start; /* Align items to the start */
+    align-items: flex-start; 
     justify-content: center;
-    padding: 10px;
+    padding: 20px;
 }
 
 .welcome-text {
-    font-size: 1.5em;  /* Reduced font size */
+    font-size: 2em;  
     text-align: left;
-    margin-bottom: 100px; /* Added more margin to separate it from other text */
+    margin-bottom: 100px; 
 }
 
 .author-name {
-    font-size: 1.2em;  /* Reduced font size */
+    font-size: 1.2em;  
     margin-bottom: 5px;
 }
 
 .version {
-    font-size: 0.5em;  /* Reduced font size */
+    font-size: 0.8em;  
     margin-bottom: 20px;
 }
 
 .progress-bar-container {
     width: 100%;
     background-color: #ddd;
-    border-radius: 10px;
-    height: 10px;
+    border-radius: 15px; /* Increase the border-radius */
+    height: 15px; /* Increase the height */
     overflow: hidden;
-    margin-top: 10px;  /* Added margin-top for better spacing */
+    margin-top: 10px;  
 }
 
 .progress-bar {
     width: 0;
     height: 100%;
-    background-color: #912f65;
-    border-radius: 10px;
-    animation: load 5s linear infinite;
+    background: linear-gradient(90deg, #d16ba5, #c777b9, #ba83ca, #aa8fd8); /* Gradient for dynamic look */
+    border-radius: 15px; /* Match the container's border-radius */
+    animation: load 5s ease-in-out infinite;
 }
 
 @keyframes load {
     0% { width: 0; }
     100% { width: 100%; }
+}
+
+.loading-text {
+    margin-top: 20px;
+    font-size: 1em;
+    color: #ecf0f1;
+    text-align: left;
+    animation: fadeInOut 1s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
 }
