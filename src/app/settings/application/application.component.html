@@ -1,4 +1,3 @@
-<!-- application.component.html -->
 <ion-header>
   <ion-toolbar>
     <ion-title>Application</ion-title>
@@ -9,11 +8,11 @@
   <ion-list>
     <ion-item>
       <ion-label>Enable Notifications</ion-label>
-      <ion-toggle #ionNotificationToggle [(ngModel)]="settings.notifications" value="0" (ionChange)="onToggle($event)"></ion-toggle>
+      <ion-toggle #ionNotificationToggle [(ngModel)]="settings.notifications" value="0" (ionChange)="onToggle($event, 'notifications')"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-label>Start Docker on startup</ion-label>
-      <ion-toggle #ionDockerToggle [(ngModel)]="settings.docker" value="1" (ionChange)="onToggle($event)"></ion-toggle>
+      <ion-toggle #ionDockerToggle [(ngModel)]="settings.docker" value="1" (ionChange)="onToggle($event, 'docker')"></ion-toggle>
       <ion-icon 
       name="information-circle-outline" 
       slot="end"
