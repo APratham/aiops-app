@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+
+import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { LogoutComponent } from './logout/logout.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -21,6 +23,12 @@ const routes: Routes = [
   {
     path: 'logout',
     component: LogoutComponent,  // Set the title for the logout page
+  },
+  {
+    path: 'home',
+    component: HomeComponent,
+    data: { title: 'Home' },
+    canActivate: [AuthGuard]  // Protect the home route with the AuthGuard
   },
   {
     path: 'dashboard',

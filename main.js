@@ -81,6 +81,7 @@ const BASE_URL = 'http://localhost:3000';
 const store = new Store();
 
 let mainWindow;
+let choiceWindow;
 let authWindow;
 let splashWindow;
 
@@ -100,12 +101,6 @@ ipcMain.on('get-profile-pic', (event) => {
   const profilePic = ('userInfo.profilePic', 'googleTokestore.getns');
   event.returnValue = profilePic;
 });
-
-function getSubValue() {
-  const sub = store.get('userInfo.sub', null);
-  console.log('Sub value:', sub);
-  return store.get('sub');
-}
 
 function getDockerSetting() {
   const sub = store.get('userInfo.sub', null);
@@ -269,6 +264,25 @@ async function checkAndStartDocker() {
   }
 }
 
+ipcMain.on('open-new-window', (event, arg) => {
+  let choiceWindow = new BrowserWindow({
+    width: 600,
+    height: 400,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'), // Load preload script
+      contextIsolation: true,
+      enableRemoteModule: false,
+      nodeIntegration: false
+    }
+  });
+
+  choiceWindow.loadURL(`${BASE_URL}/dashboard`); // Adjust this URL to the new page/component
+
+  choiceWindow.on('closed', () => {
+    choiceWindow = null;
+  });
+});
+
 app.on('ready', async () => {
   protocol.registerHttpProtocol('msal', (request, callback) => {
     const requestUrl = new URL(request.url);
@@ -364,8 +378,8 @@ async function createMainWindow() {
     console.log('Tokens retrieved:', { googleTokens, msTokens });
 
     if (googleTokens || msTokens) {
-      console.log('Tokens found, loading dashboard...');
-      mainWindow.loadURL(`${BASE_URL}/dashboard`);
+      console.log('Tokens found, loading main page...');
+      mainWindow.loadURL(`${BASE_URL}/home`);
       mainWindow.webContents.once('did-finish-load', async () => {
         // Handle tokens if they exist
         if (googleTokens) {

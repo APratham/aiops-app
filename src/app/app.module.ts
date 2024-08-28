@@ -5,6 +5,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { HttpClientModule } from '@angular/common/http'; 
 import { RouteReuseStrategy } from '@angular/router';
 
+import { HomeComponent } from './home/home.component';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -22,7 +23,7 @@ import { DockerInfoPopoverComponent } from './settings/application/docker-info-p
 
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, DockerInfoPopoverComponent],
+  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, DockerInfoPopoverComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

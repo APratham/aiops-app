@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     this.ipcRenderer.on('auth-success', (event: IpcRendererEvent, data: any) => {
       const { uniqueId } = data;
       console.log('Login successful, uniqueId:', uniqueId);
-      this.router.navigate(['/dashboard']);  // Redirect using Angular's router
+      this.router.navigate(['/home']);  // Redirect using Angular's router
     });
 
     this.ipcRenderer.on('auth-window-closed', () => {

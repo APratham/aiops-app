@@ -9,5 +9,6 @@ contextBridge.exposeInMainWorld('electron', {
     on: (channel, listener) => ipcRenderer.on(channel, (event, ...args) => listener(event, ...args)),
     removeAllListeners: (channel) => ipcRenderer.removeAllListeners(channel),
     invoke: (channel, data) => ipcRenderer.invoke(channel, data),  // Expose invoke method
+    openNewWindow: () => ipcRenderer.send('open-new-window'), // Expose openNewWindow method
   }
 });

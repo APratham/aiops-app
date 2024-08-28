@@ -4,6 +4,7 @@ export interface ElectronAPI {
     send(channel: string, data?: any): void;
     sendSync(channel: string, data?: any): any; // Ensure sendSync is always defined
     on(channel: string, listener: (event: any, data: any) => void): void;
+    openNewWindow(): void;
   };
 }
 
