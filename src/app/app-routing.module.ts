@@ -9,6 +9,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { AccountComponent } from './settings/account/account.component';
 import { ApplicationComponent } from './settings/application/application.component';
 import { ThemeComponent } from './settings/theme/theme.component';
+import { ChoicewindowComponent } from './choicewindow/choicewindow.component';
 
 
 import { AuthGuard } from './auth.guard';  // Import the AuthGuard
@@ -34,6 +35,12 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     data: { title: 'Dashboard' },
+    canActivate: [AuthGuard]  // Protect the dashboard route with the AuthGuard
+  },
+  {
+    path: 'choicewindow',
+    component: ChoicewindowComponent,
+    data: { title: 'Choose container' },
     canActivate: [AuthGuard]  // Protect the dashboard route with the AuthGuard
   },
   {

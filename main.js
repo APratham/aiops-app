@@ -276,7 +276,7 @@ ipcMain.on('open-new-window', (event, arg) => {
     }
   });
 
-  choiceWindow.loadURL(`${BASE_URL}/dashboard`); // Adjust this URL to the new page/component
+  choiceWindow.loadURL(`${BASE_URL}/choicewindow`); // Adjust this URL to the new page/component
 
   choiceWindow.on('closed', () => {
     choiceWindow = null;

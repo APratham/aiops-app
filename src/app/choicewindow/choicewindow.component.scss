@@ -1,0 +1,18 @@
+@import '/src/app/auth-styles.scss';
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 40px);  // Adjusted to account for 20px margin on top and bottom
+    width: calc(100vw - 40px);   // Adjusted to account for 20px margin on left and right
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+    margin: 20px;  // Simplified margin to ensure equal spacing on all sides
+    max-width: 100%;     
+    max-height: 100%;    
+}

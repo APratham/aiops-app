@@ -17,13 +17,14 @@ import { SettingsComponent } from './settings/settings.component';
 import { AccountComponent } from './settings/account/account.component';
 import { ApplicationComponent } from './settings/application/application.component';
 import { ThemeComponent } from './settings/theme/theme.component';
+import { ChoicewindowComponent } from './choicewindow/choicewindow.component';
 
 import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
 import { DockerInfoPopoverComponent } from './settings/application/docker-info-popover/docker-info-popover.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, DockerInfoPopoverComponent],
+  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, ChoicewindowComponent, DockerInfoPopoverComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
