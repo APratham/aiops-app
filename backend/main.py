@@ -135,7 +135,18 @@ async def get_service_details(namespace: str, service_name: str):
     except k8s_client.exceptions.ApiException as e:
         raise HTTPException(status_code=e.status, detail=f"Service not found: {e.reason}")
 
-## Docker API Routes
+# Docker API Routes
+#
+#                        ##         .
+#                  ## ## ##        ==
+#               ## ## ## ## ##    ===
+#           /"""""""""""""""""\___/ ===
+#      ~~~ {~~ ~~~~ ~~~ ~~~~ ~~~ ~ /  ===- ~~~
+#           \______ o           __/
+#             \    \         __/
+#              \____________/
+#
+#
 # Route to list names of running Docker containers
 @app.get("/docker-containers/list", response_model=list)
 async def list_running_docker_containers():
