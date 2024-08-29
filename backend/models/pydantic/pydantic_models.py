@@ -1,6 +1,6 @@
 # models.py
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class User(BaseModel):
     sub: str 

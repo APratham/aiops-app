@@ -7,6 +7,7 @@ from models.pydantic import *
 from typing import Optional
 from middleware import CORSConfig
 import uvicorn 
+import docker # type: ignore
 import os
 import logging
 
@@ -55,6 +56,71 @@ async def test_endpoint():
 @app.get("/status", response_model=StatusResponse)
 async def read_status():
     return {"status": "ok", "service": "Python Service", "port": PORT} 
+
+# Route to list names of running Docker containers
+@app.get("/docker-containers/list", response_model=list)
+async def list_running_docker_containers():
+    try:
+        client = docker.from_env()
+        containers = client.containers.list()
+
+        container_names = [container.name for container in containers]
+        
+        return container_names
+
+    except docker.errors.DockerException as e:
+        raise HTTPException(status_code=500, detail="Docker API error")
+
+# Route for container IDs
+@app.get("/docker-containers/id/{container_id}", response_model=dict)
+async def get_docker_container_info_by_id(container_id: str):
+    try:
+        client = docker.from_env()
+        container = client.containers.get(container_id)
+        
+        container_info = {
+            "id": container.id,
+            "name": container.name,
+            "status": container.status,
+            "image": container.image.tags,
+            "created": container.attrs['Created'],
+            "ports": container.attrs['NetworkSettings']['Ports'],
+            "state": container.attrs['State'],
+        }
+
+        return container_info
+
+    except docker.errors.NotFound:
+        raise HTTPException(status_code=404, detail=f"Container with ID '{container_id}' not found")
+    except docker.errors.DockerException as e:
+        raise HTTPException(status_code=500, detail="Docker API error")
+
+# Route for container names
+@app.get("/docker-containers/name/{container_name}", response_model=dict)
+async def get_docker_container_info_by_name(container_name: str):
+    try:
+        client = docker.from_env()
+        container = client.containers.get(container_name)
+        
+        container_info = {
+            "id": container.id,
+            "name": container.name,
+            "status": container.status,
+            "image": container.image.tags,
+            "created": container.attrs['Created'],
+            "ports": container.attrs['NetworkSettings']['Ports'],
+            "state": container.attrs['State'],
+        }
+
+        return container_info
+    except docker.errors.NotFound:
+        raise HTTPException(status_code=404, detail=f"Container with name '{container_name}' not found")
+
+   # except docker.errors.NotFound:
+   #     raise HTTPException(status_code=404, detail=f"Container with name '{container_name}' not found")
+   # except docker.errors.DockerException as e:
+   #     raise HTTPException(status_code=500, detail="Docker API error")
+  
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
