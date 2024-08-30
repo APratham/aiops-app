@@ -1,6 +1,36 @@
 <ion-app>
   <ion-content>
-    <div class="text-container">
+    <div class="main-container">
+      <!-- Left Container -->
+      <div class="left-container">
+        <div class="type-indicator" (click)="toggleDropdown()">
+          {{ selectedType }} 
+          <ion-icon class="dropdown-icon" name="chevron-down-outline"></ion-icon>
+        </div>
+        <div class="dropdown-menu" *ngIf="dropdownOpen">
+          <div class="dropdown-item" (click)="selectType('Docker')">Docker</div>
+          <div class="dropdown-item" (click)="selectType('Kubernetes')">Kubernetes</div>
+        </div>
+        <ul class="container-list">
+          <li *ngFor="let container of containers">
+            <div class="container-item">
+              {{ container.name }}
+              <ion-icon 
+              name="information-circle-outline" 
+              class="info-icon" 
+              color="primary"
+              (click)="presentPopover($event, container)">
+            </ion-icon>
+            </div>
+          </li>
+        </ul>
+               
+      </div>
+      
+      <!-- Right Container -->
+      <div class="right-container">
+        <!-- Logs or other content goes here -->
+      </div>
     </div>
   </ion-content>
 </ion-app>

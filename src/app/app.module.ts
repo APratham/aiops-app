@@ -18,13 +18,14 @@ import { AccountComponent } from './settings/account/account.component';
 import { ApplicationComponent } from './settings/application/application.component';
 import { ThemeComponent } from './settings/theme/theme.component';
 import { ChoicewindowComponent } from './choicewindow/choicewindow.component';
+import { ChoiceInfoPopoverComponent } from './choicewindow/choice-info-popover/choice-info-popover.component';
 
 import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
 import { DockerInfoPopoverComponent } from './settings/application/docker-info-popover/docker-info-popover.component';
 
 
 @NgModule({
-  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, ChoicewindowComponent, DockerInfoPopoverComponent],
+  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, ChoicewindowComponent, ChoiceInfoPopoverComponent, DockerInfoPopoverComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

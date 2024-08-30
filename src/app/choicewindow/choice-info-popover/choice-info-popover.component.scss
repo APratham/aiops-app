@@ -1,0 +1,25 @@
+.container-details {
+    padding: 20px;
+    font-size: 14px;
+    
+    h3 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+  
+    p {
+      margin: 5px 0;
+    }
+  }
+
+  ion-popover {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 300px;  /* Set a fixed width */
+    height: auto;  /* Allow height to adjust based on content */
+  }
+  
+  
