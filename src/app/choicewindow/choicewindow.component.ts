@@ -14,11 +14,11 @@ interface Container {
   templateUrl: './choicewindow.component.html',
   styleUrls: ['./choicewindow.component.scss']
 })
-
 export class ChoicewindowComponent implements OnInit {
   containers: Container[] = [];
   selectedType: string = 'Docker';  // Default selected type
   dropdownOpen: boolean = false;
+  selectedContainer: Container | null = null;  // Store selected container
 
   constructor(private popoverController: PopoverController) {}
 
@@ -37,7 +37,7 @@ export class ChoicewindowComponent implements OnInit {
   selectType(type: string) {
     this.selectedType = type;
     this.dropdownOpen = false;
-  
+
     if (type === 'Docker') {
       this.containers = [
         { name: 'Container 1', status: 'Running', created: '2024-08-01', info: 'Docker container running on port 8080' },
@@ -52,9 +52,10 @@ export class ChoicewindowComponent implements OnInit {
       ];
     }
   }
-  
 
   async presentPopover(event: Event, container: Container) {
+    this.selectedContainer = container;  // Store selected container
+
     const popover = await this.popoverController.create({
       component: ChoiceInfoPopoverComponent,
       componentProps: {
@@ -68,4 +69,20 @@ export class ChoicewindowComponent implements OnInit {
     });
     return await popover.present();
   }
+
+  selectContainer() {
+    if (this.selectedContainer) {
+      // Send data to main process
+      window.electron.ipcRenderer.send('container-selected', {
+        name: this.selectedContainer.name,
+        id: this.selectedContainer.name, // Assuming name is used as an ID
+        type: this.selectedType,
+      });
+  
+      // Close the current window
+      window.electron.ipcRenderer.send('close-window');
+    } else {
+      console.log('No container selected');
+    }
+  }  
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IpcRendererEvent } from 'electron';
  
@@ -16,13 +17,22 @@ export class DashboardComponent implements OnInit {
 
   ipcRenderer = (window as any).electron.ipcRenderer;
   idToken: string | null = null;
+  containerData: any;
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     const logoutButton = document.querySelector('ion-button#logout');
     const callApiButton = document.querySelector('ion-button#callapi');
+
+    window.electron.ipcRenderer.on('container-data', (event, data) => {
+      this.containerData = data;
+      console.log('Received container data:', this.containerData);
+    });
+
+    window.electron.ipcRenderer.on('navigate-to-dashboard', () => {
+      this.router.navigate(['/dashboard']);
+    });
 
     // Fetch the value from electron-store
     this.getStoreValue('googleTokens').then((value) => {

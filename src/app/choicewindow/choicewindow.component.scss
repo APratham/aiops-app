@@ -101,9 +101,16 @@
     width: 100%;
   }
   
-  .info-icon {
+.info-icon {
     margin-left: 10px;
     font-size: 16px;
     cursor: pointer;
-  }
+}
+
+.select-container-button {
+position: fixed;
+    bottom: 16px;
+    right: 16px;
+}
+   
   

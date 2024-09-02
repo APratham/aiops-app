@@ -102,6 +102,23 @@ ipcMain.on('get-profile-pic', (event) => {
   event.returnValue = profilePic;
 });
 
+ipcMain.on('container-selected', (event, containerData) => {
+  console.log('Container selected:', containerData);
+  if (mainWindow) {
+    // Send the container data to the Angular app
+    mainWindow.webContents.send('container-data', containerData);
+
+    // Navigate to the /dashboard route
+    mainWindow.webContents.send('navigate-to-dashboard');
+  }
+});
+
+ipcMain.on('close-window', () => {
+  if (BrowserWindow.getFocusedWindow()) {
+    BrowserWindow.getFocusedWindow().close();
+  }
+});
+
 function getDockerSetting() {
   const sub = store.get('userInfo.sub', null);
 
