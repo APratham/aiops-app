@@ -24,6 +24,7 @@ export class ChoicewindowComponent implements OnInit {
   selectedType: string = 'Docker';  // Default selected type
   dropdownOpen: boolean = false;
   selectedContainer: Container | null = null;
+  containerLogs: string = ''; // Store logs here
 
   constructor(
     private popoverController: PopoverController,
@@ -56,9 +57,11 @@ export class ChoicewindowComponent implements OnInit {
 
   selectContainerItem(container: Container) {
     if (this.selectedContainer && this.selectedContainer.name === container.name) {
-      this.selectedContainer = null;  // Unselect the container
+      this.selectedContainer = null;
+      this.containerLogs = ''; // Clear logs when unselected
     } else {
-      this.selectedContainer = container;  // Otherwise, select the container
+      this.selectedContainer = container;
+      this.fetchLogs(container.id); // Fetch logs for the selected container
     }
   }
 
@@ -97,4 +100,18 @@ export class ChoicewindowComponent implements OnInit {
       console.log('No container selected');
     }
   }
+
+    // Function to fetch logs
+    fetchLogs(containerId: string) {
+      this.containerService.getContainerLogsById(containerId).subscribe(
+          data => {
+              console.log('Received data:', data); // Debugging line to see what's received
+              this.containerLogs = data.logs || 'No logs available';
+          },
+          error => {
+              console.error('Failed to fetch logs:', error);
+          }
+      );
+  }
+  
 }

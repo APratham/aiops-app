@@ -104,12 +104,13 @@ ipcMain.on('get-profile-pic', (event) => {
 
 ipcMain.on('container-selected', (event, containerData) => {
   console.log('Container selected:', containerData);
-  if (mainWindow) {
-    // Send the container data to the Angular app
-    mainWindow.webContents.send('container-data', containerData);
 
-    // Navigate to the /dashboard route
-    mainWindow.webContents.send('navigate-to-dashboard');
+  if (mainWindow) {
+    mainWindow.webContents.loadURL(`${BASE_URL}/dashboard`);
+
+    mainWindow.webContents.once('did-finish-load', () => {
+      mainWindow.webContents.send('container-data', containerData);
+    });
   }
 });
 

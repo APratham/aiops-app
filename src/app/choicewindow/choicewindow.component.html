@@ -31,8 +31,10 @@
       
       <!-- Right Container -->
       <div class="right-container">
-        <!-- Logs or other content goes here -->
-      </div>
+        <div *ngIf="selectedContainer">
+          <pre>{{ containerLogs }}</pre> <!-- Display logs here -->
+        </div>
+      </div>      
     </div>
     <ion-footer *ngIf="selectedContainer">
       <ion-button expand="full" (click)="selectContainer()" class="select-container-button">

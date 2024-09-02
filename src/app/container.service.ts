@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,20 @@ export class ContainerService {
   // Fetch detailed Docker container info by name
   getDockerContainerInfo(containerName: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/docker-containers/name/${containerName}`);
+  }
+
+  // Method to get logs by container ID
+  getContainerLogsById(containerId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/docker-containers/id/${containerId}/logs`).pipe(
+      catchError(error => {
+        console.error('Error fetching logs:', error);
+        return throwError(() => new Error('Error fetching logs'));
+      })
+    );
+  }
+
+  getContainerLogsByName(containerName: string): Observable<any> {
+    return this.http.get(`/docker-containers/name/${containerName}/logs`);
   }
 
   // Fetch detailed information for all containers

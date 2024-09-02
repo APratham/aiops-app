@@ -1,3 +1,50 @@
+## ------------------ FastAPI Entry Point ------------------ ## 
+#                               __
+#     ____     ____          __/ /_ __        __
+#    / _  \   / __ \________/_   _// /_  ____/ /.-..-.
+#   / __  /  / ____/ __/ _ / /  /_/ __ \/ _ / .-. /, /
+#  /_/ /_/../_/   /_/ /___/_/____/_/ /_/___/_/  // //
+# 
+# --------------------------------------------------------- #
+#
+# Antariksh Pratham, N1191635
+# Major Project appplication
+# Masters in Cloud Computing, Nottingham Trent University
+# -------------------------------------------------------- #
+#
+# This is the main entry point for the FastAPI application.
+# FastAPI uses Restful APIs to interact with the Kubernetes and 
+# Docker APIs to provide information about the Docker containers,
+# Kubernetes pods, nodes and services. This file contains the backend
+# logic for the application. These APIs are protected by Google OAuth2
+# token verification. The application is also configured to expose 
+# the APIs to the frontend application using an Express.js server.
+# -------------------------------------------------------- #
+#
+# GNU Affero General Public License v3 (AGPLv3)
+# 
+# This software is licensed under the GNU Affero General Public 
+# License version 3 (AGPLv3). By using or modifying this software, 
+# you agree to the following terms:
+# 
+# 1. Source Code Availability: You must provide access to the complete
+#   source code of any modified version of this software when it is
+#  used to provide a service over a network. This obligation extends
+#  to the source code of the software itself and any derivative works.
+# 
+# 2. Copyleft: Any distribution of this software or derivative works
+# must be licensed under the AGPLv3. You may not impose any additional
+# restrictions beyond those contained in this license.
+# 
+# 3. Disclaimer of Warranty: This software is provided "as-is," without
+# any warranty of any kind, express or implied, including but not 
+# limited to the warranties of merchantability or fitness for a 
+# particular purpose.
+# 
+# For the full terms of the AGPLv3, please refer to the full license 
+# text available at https://www.gnu.org/licenses/agpl-3.0.html.
+# ---------------------------------------------------------- #
+
 from fastapi import FastAPI, Depends, HTTPException, Header, status
 from fastapi.responses import JSONResponse
 from google.oauth2 import id_token
@@ -32,6 +79,21 @@ k8s_v1 = k8s_client.CoreV1Api()
 GOOGLE_OAUTH2_TOKEN_INFO_URL = "https://oauth2.googleapis.com/tokeninfo"
 CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
+# Function to verify the Google OAuth token partially adapted from the Google OAuth2 documentation
+# Copyright 2016 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this code except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 # Function to verify the Google OAuth token
 async def verify_google_oauth_token(authorization: Optional[str] = Header(None)):
@@ -145,7 +207,24 @@ async def get_service_details(namespace: str, service_name: str):
 #           \______ o           __/
 #             \    \         __/
 #              \____________/
+# 
+# The "Moby Duck" is a registered trademark of Docker, Inc. registered 
+# in the United States and other countries. 
+# Docker ASCII art from Boot2Docker. 
 #
+# Copyright 2004 by Andreas Brekken
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this code except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 #
 # Route to list names of running Docker containers
 @app.get("/docker-containers/list", response_model=list)
@@ -214,6 +293,35 @@ async def get_docker_container_info_by_name(container_name: str):
    # except docker.errors.DockerException as e:
    #     raise HTTPException(status_code=500, detail="Docker API error")
   
+# Route for container logs using id
+@app.get("/docker-containers/id/{container_id}/logs", 
+         response_model=ContainerLogs, 
+         responses={404: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
+async def get_logs_by_id(container_id: str, lines: Optional[int] = 14):
+    try:
+        docker_client = docker.from_env()
+        container = docker_client.containers.get(container_id)
+        logs = container.logs(tail=lines).decode('utf-8')
+        return {"logs": logs}
+    except docker.errors.NotFound:
+        raise HTTPException(status_code=404, detail=f"No container found with ID: {container_id}")
+    except docker.errors.DockerException as e:
+        raise HTTPException(status_code=500, detail=str(e)) 
+    
+# Route for container logs using name
+@app.get("/docker-containers/name/{container_name}/logs", 
+         response_model=ContainerLogs, 
+         responses={404: {"model": ErrorResponse}, 500: {"model": ErrorResponse}})
+async def get_logs_by_name(container_name: str, lines: Optional[int] = 14):
+    try:
+        docker_client = docker.from_env()
+        container = docker_client.containers.get(container_name)
+        logs = container.logs(tail=lines).decode('utf-8')
+        return {"logs": logs}
+    except docker.errors.NotFound:
+        raise HTTPException(status_code=404, detail=f"No container found with name: {container_name}")
+    except docker.errors.DockerException as e:
+        raise HTTPException(status_code=500, detail=str(e))    
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

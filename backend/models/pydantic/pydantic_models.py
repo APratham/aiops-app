@@ -11,7 +11,10 @@ class User(BaseModel):
 
 class UserInfo(BaseModel):
     user_email: str
-    message: str   
+    message: str  
+
+class ContainerLogs(BaseModel):
+    logs: str     
 
 class StatusResponse(BaseModel):
     status: str
@@ -20,6 +23,9 @@ class StatusResponse(BaseModel):
 
 class MessageResponse(BaseModel):
     message: str    
+
+class ErrorResponse(BaseModel):
+    detail: str    
     
 class MessageResponseWithUser(BaseModel):
     message: str        
