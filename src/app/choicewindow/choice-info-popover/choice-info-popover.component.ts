@@ -9,6 +9,7 @@ import { PopoverController } from '@ionic/angular';
 
 export class ChoiceInfoPopoverComponent {
   @Input() containerName!: string;
+  @Input() containerId!: string; 
   @Input() containerStatus!: string;
   @Input() containerCreated!: string;
   @Input() containerInfo!: string;

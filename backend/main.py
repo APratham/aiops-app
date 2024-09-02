@@ -192,8 +192,11 @@ async def get_docker_container_info_by_name(container_name: str):
         docker_client = docker.from_env()
         container = docker_client.containers.get(container_name)
         
+        # Slice the container ID to get the short version
+        short_container_id = container.id[:12]
+
         container_info = {
-            "id": container.id,
+            "id": short_container_id,  # Use the short ID
             "name": container.name,
             "status": container.status,
             "image": container.image.tags,

@@ -81,13 +81,49 @@
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, border 0.3s ease;
     cursor: pointer;
-}
-
-.container-list li:hover {
+  }
+  
+  .container-list li:hover {
     background-color: rgba(0, 123, 255, 0.1);
-}
+  }
+  
+  .container-list li.selected {
+    background-color: rgba(0, 123, 255, 0.2);
+    border: 2px solid #007bff;
+  }
+  
+  .container-list li.unselected {
+    background-color: white;
+    border: 1px solid #dddddd;
+    color: #333333; 
+  }
+  
+  .dropdown-icon {
+    margin-left: 10px;
+    font-size: 16px;
+  }
+  
+  .container-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .info-icon {
+    margin-left: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .select-container-button {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+  }
+  
 
 .dropdown-icon {
     margin-left: 10px;  
@@ -108,9 +144,12 @@
 }
 
 .select-container-button {
-position: fixed;
+    position: fixed;
     bottom: 16px;
     right: 16px;
-}
-   
-  
+  }
+
+  .dropdown-icon {
+    margin-left: 10px;  
+    font-size: 16px;   
+  }

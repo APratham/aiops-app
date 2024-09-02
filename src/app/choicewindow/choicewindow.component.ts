@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import { ContainerService } from '../container.service';
 import { PopoverController } from '@ionic/angular';
 import { ChoiceInfoPopoverComponent } from './choice-info-popover/choice-info-popover.component';
 
 interface Container {
+  id: string;
   name: string;
   status: string;
   created: string;
-  info: string;
+  image: string[];
+  ports: any;
+  state: any;
 }
 
 @Component({
@@ -14,20 +18,20 @@ interface Container {
   templateUrl: './choicewindow.component.html',
   styleUrls: ['./choicewindow.component.scss']
 })
+
 export class ChoicewindowComponent implements OnInit {
   containers: Container[] = [];
   selectedType: string = 'Docker';  // Default selected type
   dropdownOpen: boolean = false;
-  selectedContainer: Container | null = null;  // Store selected container
+  selectedContainer: Container | null = null;
 
-  constructor(private popoverController: PopoverController) {}
+  constructor(
+    private popoverController: PopoverController,
+    private containerService: ContainerService
+  ) {}
 
   ngOnInit() {
-    this.containers = [
-      { name: 'Container 1', status: 'Running', created: '2024-08-01', info: 'Docker container running on port 8080' },
-      { name: 'Container 2', status: 'Stopped', created: '2024-08-02', info: 'Stopped container for web server' },
-      { name: 'Container 3', status: 'Paused', created: '2024-08-03', info: 'Paused container for database' }
-    ];
+    this.loadContainers(this.selectedType);
   }
 
   toggleDropdown() {
@@ -37,24 +41,29 @@ export class ChoicewindowComponent implements OnInit {
   selectType(type: string) {
     this.selectedType = type;
     this.dropdownOpen = false;
+    this.loadContainers(type);
+  }
 
+  loadContainers(type: string) {
     if (type === 'Docker') {
-      this.containers = [
-        { name: 'Container 1', status: 'Running', created: '2024-08-01', info: 'Docker container running on port 8080' },
-        { name: 'Container 2', status: 'Stopped', created: '2024-08-02', info: 'Stopped container for web server' },
-        { name: 'Container 3', status: 'Paused', created: '2024-08-03', info: 'Paused container for database' }
-      ];
+      this.containerService.getAllDockerContainerDetails().subscribe(containers => {
+        this.containers = containers;
+      });
     } else if (type === 'Kubernetes') {
-      this.containers = [
-        { name: 'Kube 1', status: 'Running', created: '2024-08-01', info: 'Kubernetes pod running on port 9090' },
-        { name: 'Kube 2', status: 'Stopped', created: '2024-08-02', info: 'Stopped pod for microservice' },
-        { name: 'Kube 3', status: 'Paused', created: '2024-08-03', info: 'Paused pod for backend service' }
-      ];
+      // Similar logic for Kubernetes
+    }
+  }
+
+  selectContainerItem(container: Container) {
+    if (this.selectedContainer && this.selectedContainer.name === container.name) {
+      this.selectedContainer = null;  // Unselect the container
+    } else {
+      this.selectedContainer = container;  // Otherwise, select the container
     }
   }
 
   async presentPopover(event: Event, container: Container) {
-    this.selectedContainer = container;  // Store selected container
+    this.selectedContainer = container;
 
     const popover = await this.popoverController.create({
       component: ChoiceInfoPopoverComponent,
@@ -62,7 +71,8 @@ export class ChoicewindowComponent implements OnInit {
         containerName: container.name,
         containerStatus: container.status,
         containerCreated: container.created,
-        containerInfo: container.info
+        containerId: container.id,
+        containerInfo: JSON.stringify(container, null, 2) // Pass the full container info as a formatted JSON string
       },
       event,
       translucent: true,
@@ -70,19 +80,21 @@ export class ChoicewindowComponent implements OnInit {
     return await popover.present();
   }
 
+  isContainerSelected(container: Container): boolean {
+    return !!(this.selectedContainer && this.selectedContainer.name === container.name);
+  }
+
   selectContainer() {
     if (this.selectedContainer) {
-      // Send data to main process
       window.electron.ipcRenderer.send('container-selected', {
         name: this.selectedContainer.name,
-        id: this.selectedContainer.name, // Assuming name is used as an ID
+        id: this.selectedContainer.id,
         type: this.selectedType,
       });
-  
-      // Close the current window
+
       window.electron.ipcRenderer.send('close-window');
     } else {
       console.log('No container selected');
     }
-  }  
+  }
 }
