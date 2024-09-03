@@ -23,10 +23,12 @@ import { ChoiceInfoPopoverComponent } from './choicewindow/choice-info-popover/c
 import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
 import { DockerInfoPopoverComponent } from './settings/application/docker-info-popover/docker-info-popover.component';
 
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 
 @NgModule({
   declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, ChoicewindowComponent, ChoiceInfoPopoverComponent, DockerInfoPopoverComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, DragDropModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
