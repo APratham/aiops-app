@@ -98,12 +98,12 @@
   
 .example-handle {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 6px;
+    right: 6px;
     color: #ccc;
     cursor: move;
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
 }
 
 .toggle-container {
@@ -133,3 +133,10 @@
     --background-checked: rgba(33, 150, 243, 0.5); 
     --handle-background: white; 
 }
+
+.example-custom-placeholder {
+    background: #ccc;
+    border: dotted 3px #999;
+    min-height: 60px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
