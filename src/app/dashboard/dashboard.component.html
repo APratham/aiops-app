@@ -6,6 +6,7 @@
       <div class="side-container" 
       [ngClass]="{'hidden': !sideContainerVisible}"
       cdkDropList
+      cdkDropListOrientation="horizontal"
       #sideList="cdkDropList"
       [cdkDropListData]="sideContainerItems"
       [cdkDropListConnectedTo]="[pageList]"
@@ -27,11 +28,12 @@
 
       <!-- Page Container (Items are Draggable) -->
       <div class="page-container"
-           cdkDropList
-           #pageList="cdkDropList"
-           [cdkDropListData]="pageContainerItems"
-           id="pageContainer"
-           (cdkDropListDropped)="onDrop($event)">
+      cdkDropList
+      #pageList="cdkDropList"
+      [cdkDropListData]="pageContainerItems"
+      [cdkDropListConnectedTo]="[sideList]"
+      id="pageContainer"
+      (cdkDropListDropped)="onDrop($event)">
         <div *ngFor="let item of pageContainerItems"
              class="example-box"
              cdkDrag

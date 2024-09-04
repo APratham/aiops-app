@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, CdkDragEnd, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragEnd, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 interface ContainerItem {
   content: string;
@@ -32,16 +32,20 @@ export class DashboardComponent implements OnInit {
 
   onDrop(event: CdkDragDrop<ContainerItem[]>) {
     if (event.previousContainer === event.container) {
-      return;
-    }
-
-    if (event.previousContainer.id === 'sideContainer' && event.container.id === 'pageContainer') {
+      // This handles sorting within the same container
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else if (event.previousContainer.id === 'sideContainer' && event.container.id === 'pageContainer') {
+      // This handles transferring from side to page container
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+    }
+    // Maintain the transform after drop
+    if (event.item.data.transform) {
+      event.item.element.nativeElement.style.transform = event.item.data.transform;
     }
   }
 
