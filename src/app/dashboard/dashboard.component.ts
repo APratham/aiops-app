@@ -3,6 +3,7 @@ import { CdkDragDrop, CdkDragEnd, moveItemInArray, transferArrayItem } from '@an
 
 interface ContainerItem {
   content: string;
+  size: 'square' | 'rectangle' | 'large-rectangle';  // Added size property
   transform?: string;  // To store the drag position
 }
 
@@ -13,21 +14,29 @@ interface ContainerItem {
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+
   containerData: any;
+  
   sideContainerItems: ContainerItem[] = [
-    { content: 'Item 1' },
-    { content: 'Item 2' },
+    { content: 'Item 1', size: 'square' },
+    { content: 'Item 2', size: 'rectangle' },
   ];
 
   pageContainerItems: ContainerItem[] = [
-    { content: 'Page Item 1' },
-    { content: 'Page Item 2' },
+    { content: 'Page Item 1', size: 'square' },
+    { content: 'Page Item 2', size: 'large-rectangle' },
   ];
 
   sideContainerVisible = true;
 
   toggleSideContainer(): void {
     this.sideContainerVisible = !this.sideContainerVisible;
+  }
+
+
+  // Dynamically set the item's class based on its size
+  getItemClass(item: ContainerItem): string {
+    return `example-box ${item.size}`;
   }
 
   onDrop(event: CdkDragDrop<ContainerItem[]>) {
@@ -43,6 +52,7 @@ export class DashboardComponent implements OnInit {
         event.currentIndex
       );
     }
+
     // Maintain the transform after drop
     if (event.item.data.transform) {
       event.item.element.nativeElement.style.transform = event.item.data.transform;
@@ -54,7 +64,6 @@ export class DashboardComponent implements OnInit {
     item.transform = transform;  // Save the position to maintain it after drop
     event.source.element.nativeElement.style.transform = transform;
   }
-
 
   ngOnInit(): void {
     window.electron.ipcRenderer.on('container-data', (event, data) => {
