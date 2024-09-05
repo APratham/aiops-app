@@ -28,9 +28,9 @@
 # you agree to the following terms:
 # 
 # 1. Source Code Availability: You must provide access to the complete
-#   source code of any modified version of this software when it is
-#  used to provide a service over a network. This obligation extends
-#  to the source code of the software itself and any derivative works.
+# source code of any modified version of this software when it is
+# used to provide a service over a network. This obligation extends
+# to the source code of the software itself and any derivative works.
 # 
 # 2. Copyleft: Any distribution of this software or derivative works
 # must be licensed under the AGPLv3. You may not impose any additional
