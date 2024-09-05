@@ -8,7 +8,6 @@ interface ContainerItem {
   isDragging?: boolean;  // To track dragging state
 }
 
-
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -39,6 +38,10 @@ export class DashboardComponent implements OnInit {
   getItemClass(item: ContainerItem): string {
     return `example-box ${item.size}`;
   }
+  
+  getPreviewClass(item: ContainerItem): string {
+    return `custom-preview preview-${item.size}`;
+  }
 
   onDrop(event: CdkDragDrop<any[]>) {
     let draggedItem = event.item.data;
@@ -68,9 +71,6 @@ export class DashboardComponent implements OnInit {
     }
   }
   
-  
-  
-
   onDragStart(event: any, item: any): void {
     item.isDragging = true;
     console.log('Drag started:', item);
@@ -87,8 +87,6 @@ export class DashboardComponent implements OnInit {
     event.source.element.nativeElement.style.transform = transformValue;
     console.log('Drag ended:', item);
   }
-  
-  
 
   ngOnInit(): void {
     window.electron.ipcRenderer.on('container-data', (event, data) => {
