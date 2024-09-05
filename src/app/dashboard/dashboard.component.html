@@ -16,6 +16,7 @@
         <div *ngFor="let item of sideContainerItems" 
              [ngClass]="getItemClass(item)"
              cdkDrag
+             [cdkDragDisabled]="item.disabled"
              (cdkDragStarted)="onDragStart($event, item)"
              (cdkDragEnded)="onDragEnd($event, item)">
              <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
@@ -36,6 +37,7 @@
         <div *ngFor="let item of pageContainerItems"
              [ngClass]="getItemClass(item)"
              cdkDrag
+             [cdkDragDisabled]="item.disabled"
              (cdkDragStarted)="onDragStart($event, item)"
              (cdkDragEnded)="onDragEnd($event, item)">
           {{ item.content }}

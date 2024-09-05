@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, CdkDragEnd, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, CdkDragEnd, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 interface ContainerItem {
   content: string;
   size: 'square' | 'rectangle' | 'large-rectangle';  // Added size property
   transform?: string;  // To store the drag position
   isDragging?: boolean;  // To track dragging state
+  disabled?: boolean; // To track draggable state
 }
 
 @Component({
@@ -17,14 +18,15 @@ export class DashboardComponent implements OnInit {
 
   containerData: any;
 
+
   sideContainerItems: ContainerItem[] = [
-    { content: 'Item 1', size: 'square', isDragging: false },
-    { content: 'Item 2', size: 'rectangle', isDragging: false },
+    { content: 'Item 1', size: 'square', isDragging: false, disabled: false },
+    { content: 'Item 2', size: 'rectangle', isDragging: false, disabled: true },
   ];
 
   pageContainerItems: ContainerItem[] = [
-    { content: 'Page Item 1', size: 'square' },
-    { content: 'Page Item 2', size: 'large-rectangle' },
+    { content: 'Page Item 1', size: 'square', isDragging: false, disabled: true },
+    { content: 'Page Item 2', size: 'large-rectangle', isDragging: false, disabled: false },
   ];
 
   sideContainerVisible = true;
