@@ -17,10 +17,9 @@
     flex-basis: 75%;
     transition: flex-basis 0.3s ease; 
     display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: repeat(auto-fit, 100px);
-    grid-auto-rows: 100px;
-    grid-gap: 10px;
+    grid-template-columns: 1fr; /* One column layout */
+    grid-template-rows: auto auto auto auto; /* Four rows: text + drop area for both sections */
+    grid-gap: 20px; /* Adds space between sections */
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 20px;
@@ -28,6 +27,31 @@
     white-space: nowrap;
     width: 100%;
 }
+
+.page-container h4 {
+    grid-column: 1 / -1; /* Makes the title span the full width */
+    margin: 0;           /* Removes the default margin */
+    padding: 5 5 5 0;          /* Removes any extra padding */
+    font-size: 1rem;     /* Adjust the font size if necessary */
+    line-height: 1.2;    /* Adjust the line height to reduce spacing between lines */
+}
+
+.text-section {
+    grid-column: 1; /* Spans the entire width */
+    padding: 10px;
+    background-color: #f9f9f9; /* Optional background color for the text sections */
+    border-radius: 5px;
+}
+
+.drop-area, .drop-area-one, .drop-area-two {
+    grid-column: 1; /* Spans the entire width */
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* Droppable grid layout */
+    grid-auto-rows: 100px;
+    grid-gap: 10px;
+    background-color: transparent;
+}
+
   
 .side-container {
     flex-grow: 1;

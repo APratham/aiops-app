@@ -18,16 +18,27 @@ import { AccountComponent } from './settings/account/account.component';
 import { ApplicationComponent } from './settings/application/application.component';
 import { ThemeComponent } from './settings/theme/theme.component';
 import { ChoicewindowComponent } from './choicewindow/choicewindow.component';
-import { ChoiceInfoPopoverComponent } from './choicewindow/choice-info-popover/choice-info-popover.component';
+import { EventsComponent } from './events/events.component';
+import { IncidentsComponent } from './incidents/incidents.component';
+import { LogsComponent } from './logs/logs.component';
+import { MetricsComponent } from './metrics/metrics.component';
+import { OverviewComponent } from './overview/overview.component';
+import { TeamComponent } from './team/team.component';
+import { UptimeComponent } from './uptime/uptime.component';
 
 import { TopBarComponent, PopoverContentDynamicComponent } from './topbar/topbar.component';
 import { DockerInfoPopoverComponent } from './settings/application/docker-info-popover/docker-info-popover.component';
+import { ChoiceInfoPopoverComponent } from './choicewindow/choice-info-popover/choice-info-popover.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
-  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, TopBarComponent, PopoverContentDynamicComponent, SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, ChoicewindowComponent, ChoiceInfoPopoverComponent, DockerInfoPopoverComponent],
+  declarations: [HomeComponent, AppComponent, LoginComponent, LogoutComponent, DashboardComponent, 
+    SettingsComponent, AccountComponent, ApplicationComponent, ThemeComponent, ChoicewindowComponent,
+    EventsComponent, IncidentsComponent, LogsComponent, MetricsComponent, OverviewComponent, TeamComponent, UptimeComponent,
+    TopBarComponent, 
+    PopoverContentDynamicComponent, ChoiceInfoPopoverComponent, DockerInfoPopoverComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, DragDropModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

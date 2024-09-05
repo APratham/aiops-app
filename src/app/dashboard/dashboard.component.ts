@@ -40,6 +40,7 @@ interface ContainerItem {
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
+
 export class DashboardComponent implements OnInit {
 
   containerData: any;
@@ -50,10 +51,15 @@ export class DashboardComponent implements OnInit {
     { content: 'Item 2', size: 'rectangle', isDragging: false, disabled: false },
   ];
 
-  pageContainerItems: ContainerItem[] = [
+  pageContainerItems1: ContainerItem[] = [
     { content: 'Page Item 1', size: 'square', isDragging: false, disabled: true },
     { content: 'Page Item 2', size: 'large-rectangle', isDragging: false, disabled: false },
   ];
+  
+  pageContainerItems2: ContainerItem[] = [
+    { content: 'Page Item 2', size: 'large-rectangle', isDragging: false, disabled: false },
+  ];
+  
 
   sideContainerVisible = true;
 

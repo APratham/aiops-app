@@ -10,7 +10,7 @@
            cdkDropListOrientation="vertical"
            #sideList="cdkDropList"
            [cdkDropListData]="sideContainerItems"
-           [cdkDropListConnectedTo]="[pageList]"
+           [cdkDropListConnectedTo]="[pageList1, pageList2]"
            id="sideContainer"
            (cdkDropListDropped)="onDrop($event)">
         <div *ngFor="let item of sideContainerItems" 
@@ -26,29 +26,67 @@
       </div>
     
       <!-- Page Container -->
-      <div class="page-container"
-           [ngClass]="{'full-width': !sideContainerVisible}" 
-           cdkDropList
-           #pageList="cdkDropList"
-           [cdkDropListData]="pageContainerItems"
-           [cdkDropListConnectedTo]="[sideList]"
-           id="pageContainer"
-           (cdkDropListDropped)="onDrop($event)">
-        <div *ngFor="let item of pageContainerItems"
-             [ngClass]="getItemClass(item)"
-             cdkDrag
-             [cdkDragDisabled]="item.disabled"
-             (cdkDragStarted)="onDragStart($event, item)"
-             (cdkDragEnded)="onDragEnd($event, item)">
-          {{ item.content }}
-          <div class="example-handle" cdkDragHandle>
-            <svg width="18px" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
-              <path d="M0 0h24v24H0z" fill="none"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
+<div class="page-container"
+[ngClass]="{'full-width': !sideContainerVisible}" 
+
+
+
+id="pageContainer"
+>
+
+<!-- Section 1 - Text Area -->
+<div class="text-section">
+<h4>Section 1 - Information</h4>
+<p>This is a text block for section 1.</p>
+</div>
+
+<!-- Section 1 - Droppable Area -->
+<div class="drop-area-one"
+cdkDropList
+#pageList1="cdkDropList"
+[cdkDropListData]="pageContainerItems1"
+[cdkDropListConnectedTo]="[sideList]"
+(cdkDropListDropped)="onDrop($event)">
+<div *ngFor="let item of pageContainerItems1"
+    [ngClass]="getItemClass(item)"
+    cdkDrag
+    [cdkDragDisabled]="item.disabled"
+    (cdkDragStarted)="onDragStart($event, item)"
+    (cdkDragEnded)="onDragEnd($event, item)">
+ {{ item.content }}
+ <div class="example-handle" cdkDragHandle>
+   <!-- SVG handle for drag icon -->
+ </div>
+</div>
+</div>
+
+<!-- Section 2 - Text Area -->
+<div class="text-section">
+<h4>Section 2 - More Information</h4>
+<p>This is a text block for section 2.</p>
+</div>
+
+<!-- Section 2 - Droppable Area -->
+<div class="drop-area-two"
+cdkDropList
+#pageList2="cdkDropList"
+[cdkDropListData]="pageContainerItems2"
+[cdkDropListConnectedTo]="[sideList]"
+(cdkDropListDropped)="onDrop($event)">
+<div *ngFor="let item of pageContainerItems2"
+    [ngClass]="getItemClass(item)"
+    cdkDrag
+    [cdkDragDisabled]="item.disabled"
+    (cdkDragStarted)="onDragStart($event, item)"
+    (cdkDragEnded)="onDragEnd($event, item)">
+ {{ item.content }}
+ <div class="example-handle" cdkDragHandle>
+   <!-- SVG handle for drag icon -->
+ </div>
+</div>
+</div>
+</div>
+
     </div>
         <!-- Toggle Side Container -->
         <div class="toggle-container">
