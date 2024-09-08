@@ -39,6 +39,14 @@
       <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
     </svg>
   </h2>
+
+  <div class="menu">
+    <button (click)="selectTab('overview')" [ngClass]="{'active': activeMenuItem === 'overview'}">Overview</button>
+    <button (click)="selectTab('events')" [ngClass]="{'active': activeMenuItem === 'events'}">Events</button>
+    <button (click)="selectTab('metrics')" [ngClass]="{'active': activeMenuItem === 'metrics'}">Metrics</button>
+    <button (click)="selectTab('logs')" [ngClass]="{'active': activeMenuItem === 'logs'}">Logs</button>
+</div>
+
 </div>
 
 <!-- Section 1 - Droppable Area -->
@@ -97,5 +105,25 @@ cdkDropList
                         (ionChange)="toggleSideContainer()"></ion-toggle>
           </ion-item>
         </div>
+
+    <!-- Conditional rendering of content based on selected tab -->
+<div *ngIf="currentTab === 'overview'">
+  <!-- Include all the content for Overview tab -->
+</div>
+
+<div *ngIf="currentTab === 'events'">
+  <!-- Include content for Events tab -->
+  <div class="text-section">Only this section will remain the same.</div>
+</div>
+
+<div *ngIf="currentTab === 'metrics'">
+  <!-- Include content for Metrics tab -->
+  <div class="text-section">Only this section will remain the same.</div>
+</div>
+
+<div *ngIf="currentTab === 'logs'">
+  <!-- Include content for Logs tab -->
+  <div class="text-section">Only this section will remain the same.</div>
+</div>      
   </ion-content>
 </ion-app>

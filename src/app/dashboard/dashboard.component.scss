@@ -29,24 +29,24 @@
 }
 
 .page-container h4 {
-    grid-column: 1 / -1; /* Makes the title span the full width */
-    margin: 0;           /* Removes the default margin */
-    padding: 5 5 5 0;          /* Removes any extra padding */
-    font-size: 1rem;     /* Adjust the font size if necessary */
-    line-height: 1.2;    /* Adjust the line height to reduce spacing between lines */
-}
+    grid-column: 1 / -1; 
+    margin: 0;           
+    padding: 5 5 5 0;          
+    font-size: 1rem;     
+    line-height: 1.2;
+}    
 
 .text-section {
-    grid-column: 1; /* Spans the entire width */
+    grid-column: 1; 
     padding: 10px;
-    background-color: #f9f9f9; /* Optional background color for the text sections */
+    background-color: #f9f9f9; 
     border-radius: 5px;
 }
 
 .drop-area, .drop-area-one, .drop-area-two {
-    grid-column: 1; /* Spans the entire width */
+    grid-column: 1;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* Droppable grid layout */
+    grid-template-columns: repeat(5, 1fr); 
     grid-auto-rows: 100px;
     grid-gap: 10px;
     background-color: transparent;
@@ -163,25 +163,81 @@
 .title-input {
     border: none;
     background: transparent;
-    font-size: 1.5rem; /* Match the size of your h2 */
+    font-size: 1.5rem; 
     font-weight: bold;
-    color: #333; /* Match the color of your h2 */
-    width: 100%; /* Full width to cover the container */
+    color: #333; 
+    width: 100%; 
 }
 
 .title-input:focus {
     outline: none;
-    border-bottom: 2px solid #666; /* Stylish underline on focus */
+    border-bottom: 2px solid #666; 
 }
 
 .edit-icon {
     cursor: pointer;
-    fill: #666; /* Grey color; change as needed */
+    fill: #666; 
     transition: fill 0.2s ease-in-out;
 }
 
 .edit-icon:hover {
-    fill: #333; /* Darker on hover */
+    fill: #333; 
 }
 
+@keyframes underline-grow {
+    from {
+        transform: scaleX(0);
+        transform-origin: center;
+    }
+    to {
+        transform: scaleX(1);
+        transform-origin: center;
+    }
+}
+
+.menu {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    border-bottom: 2px solid #ccc;
+}
+
+.menu button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    color: #666; 
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.menu button:hover {
+    background-color: #e9e9e9; 
+    border: 1px dotted #ddd; 
+    color: #333; 
+}
+
+.menu button.active {
+    color: #000; 
+}
+
+.menu button::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #742b65; 
+    transform: scaleX(0);
+    transition: transform 0.3s ease; 
+}
+
+.menu button.active::after {
+    transform: scaleX(1); 
+    animation: underline-grow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; 
+}
 

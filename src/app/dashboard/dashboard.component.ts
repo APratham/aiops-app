@@ -46,7 +46,8 @@ export class DashboardComponent implements OnInit {
   containerData: any;
   title = 'system-monitor-1'; 
   editMode = false; 
-
+  currentTab = 'overview';
+  activeMenuItem: string = 'overview';
 
   sideContainerItems: ContainerItem[] = [
     { content: 'Item 1', size: 'square', isDragging: false, disabled: false },
@@ -74,6 +75,11 @@ export class DashboardComponent implements OnInit {
 
   getItemClass(item: ContainerItem): string {
     return `example-box ${item.size}`;
+  }
+
+  selectTab(tabName: string): void {
+    this.currentTab = tabName;
+    this.activeMenuItem = tabName; // Set active menu item
   }
 
 /**   getSideItemClass(item: ContainerItem): string {
