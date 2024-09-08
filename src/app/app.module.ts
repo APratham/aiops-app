@@ -31,6 +31,7 @@ import { DockerInfoPopoverComponent } from './settings/application/docker-info-p
 import { ChoiceInfoPopoverComponent } from './choicewindow/choice-info-popover/choice-info-popover.component';
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -39,7 +40,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EventsComponent, IncidentsComponent, LogsComponent, MetricsComponent, OverviewComponent, TeamComponent, UptimeComponent,
     TopBarComponent, 
     PopoverContentDynamicComponent, ChoiceInfoPopoverComponent, DockerInfoPopoverComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, DragDropModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, DragDropModule, FormsModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -44,6 +44,8 @@ interface ContainerItem {
 export class DashboardComponent implements OnInit {
 
   containerData: any;
+  title = 'system-monitor-1'; 
+  editMode = false; 
 
 
   sideContainerItems: ContainerItem[] = [
@@ -60,13 +62,15 @@ export class DashboardComponent implements OnInit {
     { content: 'Page Item 2', size: 'large-rectangle', isDragging: false, disabled: false },
   ];
   
-
   sideContainerVisible = true;
 
   toggleSideContainer(): void {
     this.sideContainerVisible = !this.sideContainerVisible;
   }
 
+  toggleEditMode(): void {
+    this.editMode = !this.editMode;
+  }
 
   getItemClass(item: ContainerItem): string {
     return `example-box ${item.size}`;

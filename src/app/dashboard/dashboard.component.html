@@ -27,17 +27,18 @@
     
       <!-- Page Container -->
 <div class="page-container"
-[ngClass]="{'full-width': !sideContainerVisible}" 
-
-
-
-id="pageContainer"
->
+[ngClass]="{'full-width': !sideContainerVisible}" id="pageContainer">
 
 <!-- Section 1 - Text Area -->
 <div class="text-section">
-<h4>Section 1 - Information</h4>
-<p>This is a text block for section 1.</p>
+  <h2>
+    <span *ngIf="!editMode">{{ title }}</span>
+    <input *ngIf="editMode" type="text" [(ngModel)]="title" class="title-input" (blur)="toggleEditMode()" (keyup.enter)="toggleEditMode()"/>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px" (click)="toggleEditMode()" class="edit-icon" *ngIf="!editMode">
+      <path d="M0 0h24v24H0z" fill="none"/>
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </svg>
+  </h2>
 </div>
 
 <!-- Section 1 - Droppable Area -->

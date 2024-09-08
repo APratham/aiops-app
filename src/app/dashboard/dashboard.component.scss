@@ -159,3 +159,29 @@
     --background-checked: rgba(33, 150, 243, 0.5); 
     --handle-background: white; 
 }
+
+.title-input {
+    border: none;
+    background: transparent;
+    font-size: 1.5rem; /* Match the size of your h2 */
+    font-weight: bold;
+    color: #333; /* Match the color of your h2 */
+    width: 100%; /* Full width to cover the container */
+}
+
+.title-input:focus {
+    outline: none;
+    border-bottom: 2px solid #666; /* Stylish underline on focus */
+}
+
+.edit-icon {
+    cursor: pointer;
+    fill: #666; /* Grey color; change as needed */
+    transition: fill 0.2s ease-in-out;
+}
+
+.edit-icon:hover {
+    fill: #333; /* Darker on hover */
+}
+
+
