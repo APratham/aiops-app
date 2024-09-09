@@ -1,5 +1,9 @@
 @import '/src/app/auth-styles.scss';
 
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
 .main-container {
     display: flex;
     flex-direction: row;
@@ -20,6 +24,7 @@
     grid-template-columns: 1fr; /* One column layout */
     grid-template-rows: auto auto auto auto; /* Four rows: text + drop area for both sections */
     grid-gap: 20px; /* Adds space between sections */
+    box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 20px;
@@ -41,6 +46,8 @@
     padding: 10px;
     background-color: #f9f9f9; 
     border-radius: 5px;
+    height: 150px;
+    overflow: hidden;
 }
 
 .drop-area, .drop-area-one, .drop-area-two {
@@ -115,7 +122,7 @@
     grid-row: span 1; /* Span 1 row */
 }
   
-.example-box.large-rectangle {
+.example-box.large-square {
     width: 200px;
     height: 200px;
     grid-column: span 2; /* Span 2 columns */
@@ -211,7 +218,7 @@
     position: relative;
     outline: none;
     color: #666; 
-    transition: color 0.3s, border-bottom 0.3s;
+    transition: color 0.1s, border-bottom 0.1s;
 }
 
 .menu button:hover {

@@ -24,16 +24,10 @@
  * THE SOFTWARE.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, CdkDragEnd, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CdkDragDrop, CdkDragEnd, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ContainerItem } from '../container.model'
 
-interface ContainerItem {
-  content: string;
-  size: 'square' | 'rectangle' | 'large-rectangle';  
-  transform?: string;  
-  isDragging?: boolean;  // To track dragging state
-  disabled?: boolean; // To track draggable state
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -49,21 +43,29 @@ export class DashboardComponent implements OnInit {
   currentTab = 'overview';
   activeMenuItem: string = 'overview';
 
+
+  @ViewChild('pageList1') pageList1!: CdkDropList;
+  @ViewChild('pageList2') pageList2!: CdkDropList;
+
   sideContainerItems: ContainerItem[] = [
     { content: 'Item 1', size: 'square', isDragging: false, disabled: false },
     { content: 'Item 2', size: 'rectangle', isDragging: false, disabled: false },
   ];
 
   pageContainerItems1: ContainerItem[] = [
-    { content: 'Page Item 1', size: 'square', isDragging: false, disabled: true },
-    { content: 'Page Item 2', size: 'large-rectangle', isDragging: false, disabled: false },
+    { content: 'Page Item 1', size: 'large-square', isDragging: false, disabled: true },
   ];
   
   pageContainerItems2: ContainerItem[] = [
-    { content: 'Page Item 2', size: 'large-rectangle', isDragging: false, disabled: false },
+    { content: 'Page Item 2', size: 'rectangle', isDragging: false, disabled: false },
   ];
   
   sideContainerVisible = true;
+
+  ngAfterViewInit() {
+    this.pageList1.data = this.pageContainerItems1;
+    this.pageList2.data = this.pageContainerItems2;
+  }
 
   toggleSideContainer(): void {
     this.sideContainerVisible = !this.sideContainerVisible;

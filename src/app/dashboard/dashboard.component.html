@@ -21,7 +21,12 @@
              (cdkDragEnded)="onDragEnd($event, item)">
              <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
           {{ item.content }}
-          <div class="example-handle" cdkDragHandle></div>
+          <div class="example-handle" cdkDragHandle>
+            <svg width="12px" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+              <path d="M0 0h24v24H0z" fill="none"></path>
+            </svg>
+          </div>
         </div>
       </div>
     
@@ -48,13 +53,13 @@
 </div>
 
 </div>
-
+<div *ngIf="currentTab === 'overview'">
 <!-- Section 1 - Droppable Area -->
 <div class="drop-area-one"
 cdkDropList
 #pageList1="cdkDropList"
 [cdkDropListData]="pageContainerItems1"
-[cdkDropListConnectedTo]="[sideList]"
+[cdkDropListConnectedTo]="[sideList, pageList1]"
 (cdkDropListDropped)="onDrop($event)">
 <div *ngFor="let item of pageContainerItems1"
     [ngClass]="getItemClass(item)"
@@ -64,8 +69,11 @@ cdkDropList
     (cdkDragEnded)="onDragEnd($event, item)">
  {{ item.content }}
  <div class="example-handle" cdkDragHandle>
-   <!-- SVG handle for drag icon -->
- </div>
+  <svg width="12px" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+    <path d="M0 0h24v24H0z" fill="none"></path>
+  </svg>
+</div>
 </div>
 </div>
 
@@ -80,7 +88,7 @@ cdkDropList
 cdkDropList
 #pageList2="cdkDropList"
 [cdkDropListData]="pageContainerItems2"
-[cdkDropListConnectedTo]="[sideList]"
+[cdkDropListConnectedTo]="[sideList, pageList2]"
 (cdkDropListDropped)="onDrop($event)">
 <div *ngFor="let item of pageContainerItems2"
     [ngClass]="getItemClass(item)"
@@ -90,10 +98,29 @@ cdkDropList
     (cdkDragEnded)="onDragEnd($event, item)">
  {{ item.content }}
  <div class="example-handle" cdkDragHandle>
-   <!-- SVG handle for drag icon -->
- </div>
+  <svg width="12px" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+    <path d="M0 0h24v24H0z" fill="none"></path>
+  </svg>
 </div>
 </div>
+</div>
+</div>
+<div *ngIf="currentTab === 'events'">
+  <!-- Include content for Events tab -->
+  <div class="text-section">Only this section will remain the same.</div>
+  <div class="text-section">Only this section will remain the same.</div>
+  <div class="text-section">Only this section will remain the same.</div>
+  <div class="text-section">Only this section will remain the same.</div>
+</div>
+<div *ngIf="currentTab === 'metrics'">
+  <!-- Include content for Metrics tab -->
+  <div class="text-section">Only this section will remain the same.</div>
+</div>
+<div *ngIf="currentTab === 'logs'">
+  <!-- Include content for Logs tab -->
+  <div class="text-section">Only this section will remain the same.</div>
+</div> 
 </div>
 
     </div>
@@ -104,26 +131,6 @@ cdkDropList
             <ion-toggle [(ngModel)]="sideContainerVisible"
                         (ionChange)="toggleSideContainer()"></ion-toggle>
           </ion-item>
-        </div>
-
-    <!-- Conditional rendering of content based on selected tab -->
-<div *ngIf="currentTab === 'overview'">
-  <!-- Include all the content for Overview tab -->
-</div>
-
-<div *ngIf="currentTab === 'events'">
-  <!-- Include content for Events tab -->
-  <div class="text-section">Only this section will remain the same.</div>
-</div>
-
-<div *ngIf="currentTab === 'metrics'">
-  <!-- Include content for Metrics tab -->
-  <div class="text-section">Only this section will remain the same.</div>
-</div>
-
-<div *ngIf="currentTab === 'logs'">
-  <!-- Include content for Logs tab -->
-  <div class="text-section">Only this section will remain the same.</div>
-</div>      
+    </div>
   </ion-content>
 </ion-app>
