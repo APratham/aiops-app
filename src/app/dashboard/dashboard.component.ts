@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CdkDragDrop, CdkDragEnd, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ContainerItem } from '../container.model'
 
@@ -32,7 +32,8 @@ import { ContainerItem } from '../container.model'
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  encapsulation: ViewEncapsulation.None // Apply this line
 })
 
 export class DashboardComponent implements OnInit {
@@ -53,7 +54,7 @@ export class DashboardComponent implements OnInit {
   ];
 
   pageContainerItems1: ContainerItem[] = [
-    { content: 'Page Item 1', size: 'large-square', isDragging: false, disabled: true },
+    { content: 'Page Item 1', size: 'large-square', isDragging: false, disabled: true, type: 'Docker', cardType: 'Docker', image: '/src/app/assets/docker-logo.png' },
   ];
   
   pageContainerItems2: ContainerItem[] = [
@@ -76,8 +77,16 @@ export class DashboardComponent implements OnInit {
   }
 
   getItemClass(item: ContainerItem): string {
-    return `example-box ${item.size}`;
+    let classes = `example-box ${item.size}`; // Base classes including the size
+    if (item.type) {
+      classes += ` ${item.type.toLowerCase()}`; // Add type-specific class
+    }
+    if (item.cardType) {
+      classes += ` ${item.cardType}`; // Future provision for additional card types
+    }
+    return classes;
   }
+  
 
   selectTab(tabName: string): void {
     this.currentTab = tabName;
@@ -131,10 +140,19 @@ export class DashboardComponent implements OnInit {
     console.log('Drag ended:', item);
   }
 
+  updateContainerCard(data: any): void {
+    // Assuming data contains the required fields.
+    this.pageContainerItems1[0].content = `Object ID: ${data.id} <br> Name: ${data.name} <br> Type: ${data.type} <img  src="../assets/docker-logo.png">`;
+    
+  }
+
   ngOnInit(): void {
     window.electron.ipcRenderer.on('container-data', (event, data) => {
       console.log('Received container data:', data);
+      this.updateContainerCard(data);  // Add this line
+      this.pageContainerItems1[0].disabled = false;
+      this.pageContainerItems1[0].type = 'Docker';
+      console.log('Updated container card with data:', this.pageContainerItems1[0].content);
     });
-    
   }
 }

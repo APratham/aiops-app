@@ -8,4 +8,5 @@ export interface ContainerItem {
   transform?: string;
   isDragging?: boolean;
   disabled?: boolean;
+  image?: string;
 }

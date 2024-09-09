@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { ContainerItem } from './container.model'; // Replace './container-item' with the correct path to the 'ContainerItem' type
+import { ContainerItem } from './container.model'; // Import the ContainerItem interface
 
 @Injectable({
   providedIn: 'root'
