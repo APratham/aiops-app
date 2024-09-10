@@ -43,6 +43,7 @@ export class DashboardComponent implements OnInit {
   editMode = false; 
   currentTab = 'overview';
   activeMenuItem: string = 'overview';
+  isDragging: boolean = false;
 
 
   @ViewChild('pageList1') pageList1!: CdkDropList;
@@ -126,14 +127,14 @@ export class DashboardComponent implements OnInit {
   }
   
   onDragStart(event: any, item: any): void {
-    item.isDragging = true;
+    this.isDragging = true;
     console.log('Drag started:', item);
   }
 
   onDragEnd(event: CdkDragEnd, item: ContainerItem) {
     const position = event.source.getFreeDragPosition();
     const transformValue = `translate3d(${position.x}px, ${position.y}px, 0)`;
-  
+    this.isDragging = false;
     item.transform = transformValue;
   
     event.source.element.nativeElement.style.transform = transformValue;
