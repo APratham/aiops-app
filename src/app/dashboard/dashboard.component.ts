@@ -55,11 +55,15 @@ export class DashboardComponent implements OnInit {
   ];
 
   pageContainerItems1: ContainerItem[] = [
-    { content: 'Page Item 1', size: 'large-square', isDragging: false, disabled: true, type: 'Docker', cardType: 'Docker', image: '/src/app/assets/docker-logo.png' },
+    { content: 'Docker Info Card', size: 'large-square', isDragging: false, disabled: true, type: 'Docker', cardType: 'info-card', image: '/src/app/assets/docker-logo.png' }, //Docker card
+    { content: 'Downtime Card', size: 'large-rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'downtime-card' },
+    { content: 'Incidents Card', size: 'large-rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'incident-card' },
+    { content: 'Uptime Card', size: 'long-rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'uptime' },
   ];
   
   pageContainerItems2: ContainerItem[] = [
-    { content: 'Page Item 2', size: 'rectangle', isDragging: false, disabled: false },
+    { content: 'CPU Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle' },
+    { content: 'Memory Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle' },
   ];
   
   sideContainerVisible = true;
@@ -78,12 +82,12 @@ export class DashboardComponent implements OnInit {
   }
 
   getItemClass(item: ContainerItem): string {
-    let classes = `example-box ${item.size}`; // Base classes including the size
+    let classes = `example-box ${item.size}`; 
     if (item.type) {
-      classes += ` ${item.type.toLowerCase()}`; // Add type-specific class
+      classes += ` ${item.type.toLowerCase()}`; 
     }
     if (item.cardType) {
-      classes += ` ${item.cardType}`; // Future provision for additional card types
+      classes += ` ${item.cardType.toLowerCase()}`; 
     }
     return classes;
   }

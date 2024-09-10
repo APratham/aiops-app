@@ -3,7 +3,7 @@ export interface ContainerItem {
   name?: string;
   type?: 'Docker' | 'Kubernetes';
   content?: string;
-  size?: 'square' | 'rectangle' | 'large-square';
+  size?: 'square' | 'rectangle' | 'large-square' | 'large-rectangle' | 'long-rectangle' | 'graph-rectangle';
   cardType?: string;
   transform?: string;
   isDragging?: boolean;
