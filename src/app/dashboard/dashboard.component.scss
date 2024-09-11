@@ -320,6 +320,42 @@
     text-wrap: auto; 
     white-space: normal; 
     padding: 10px 0 20px 20px;
+
+
+        .recovery-time {
+            position: absolute; /* Position it relative to the card's boundaries */
+            top: 10px; /* Adjust to suit your design */
+            right: 20px; /* Adjust to suit your design */
+            font-size: 18px;
+            color: #000000; /* Adjust color to suit your design */
+        }
+
+        .recovery-time-value {
+            font-weight: bold;
+        }
+
+        .recent-downtimes {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px; /* Smaller font size for recent event listings */
+            color: #666; /* Grey color for less emphasis */
+            text-align: right;
+        }
+        
+        .recent-downtimes p {
+            margin: 0; /* Remove margin to save space */
+            font-weight: bold;
+        }
+        
+        .recent-downtimes ul {
+            padding: 0; /* Remove padding for alignment */
+            list-style-type: none; /* No bullets for a cleaner look */
+        }
+        
+        .recent-downtimes li {
+            margin: 2px 0; /* Small vertical spacing between items */
+        }
 }
 
 .downtime-card h3 {

@@ -166,7 +166,16 @@ export class DashboardComponent implements OnInit {
     this.pageContainerItems1[0].content = `Object ID: ${data.id} <br> Name: ${data.name} <br> Type: ${data.type} <img  src="../assets/docker-logo.png">`;
     this.pageContainerItems1[1].content = `<h3>Downtime</h3>
     <p class="downtime-value">0%</p>
-    <p class="downtime-change">&#8681; 0</p>`;
+    <p class="downtime-change">&#8681; 0</p>
+    <p class="recovery-time">Avg Recovery: <span class="recovery-time-value">23m</span></p>
+    <div class="recent-downtimes">
+    <p>Recent Downtimes:</p>
+      <ul>
+        <li>2024-09-11T08:30:00Z</li>
+        <li>2024-09-10T14:22:00Z</li>
+        <li>2024-09-09T19:45:00Z</li>
+      </ul>
+    </div>`;
     this.pageContainerItems1[2].content = `<h3>Incidents</h3>
     <p class="incident-value">0</p>
     <p class="incident-change">&#9888; 0</p>`;
