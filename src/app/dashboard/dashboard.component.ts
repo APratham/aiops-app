@@ -65,6 +65,11 @@ export class DashboardComponent implements OnInit {
     { content: 'CPU Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle' },
     { content: 'Memory Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle' },
   ];
+
+  downtimeData = {
+    downtime: "0%",
+    change: "0%"
+  };
   
   sideContainerVisible = true;
 
@@ -79,7 +84,18 @@ export class DashboardComponent implements OnInit {
 
   toggleEditMode(): void {
     this.editMode = !this.editMode;
+  
+    if (this.editMode) {
+      setTimeout(() => {
+        const inputElement = document.querySelector('.title-input') as HTMLInputElement;
+        if (inputElement) {
+          inputElement.focus({preventScroll: true});  // Prevents scrolling on focus
+        }
+      }, 100);
+    }
   }
+  
+  
 
   getItemClass(item: ContainerItem): string {
     let classes = `example-box ${item.size}`; 
@@ -148,6 +164,12 @@ export class DashboardComponent implements OnInit {
   updateContainerCard(data: any): void {
     // Assuming data contains the required fields.
     this.pageContainerItems1[0].content = `Object ID: ${data.id} <br> Name: ${data.name} <br> Type: ${data.type} <img  src="../assets/docker-logo.png">`;
+    this.pageContainerItems1[1].content = `<h3>Downtime</h3>
+    <p class="downtime-value">0%</p>
+    <p class="downtime-change">&#8681; 0</p>`;
+    this.pageContainerItems1[2].content = `<h3>Incidents</h3>
+    <p class="incident-value">0</p>
+    <p class="incident-change">&#9888; 0</p>`;
     
   }
 

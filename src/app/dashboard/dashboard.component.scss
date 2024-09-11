@@ -194,16 +194,19 @@
 .title-input {
     border: none;
     background: transparent;
-    font-size: 1.5rem; 
-    font-weight: bold;
+    font-size: 36px; 
     color: #333; 
     width: 100%; 
+    transition: border-bottom 0.3s ease; // Smooth transition for the underline
+    border-bottom: 2px solid transparent; // Default state without underline
 }
 
 .title-input:focus {
     outline: none;
-    border-bottom: 2px solid #666; 
+    border-bottom: 2px solid #efe8e8; // Underline appears on focus with animation
+    width: 30%; 
 }
+
 
 .edit-icon {
     cursor: pointer;
@@ -278,7 +281,13 @@
     padding-left: 10px;  
 }
 
- .docker.info-card img {
+.docker.info-card {
+    font-size: 12px;
+    font-weight: normal;
+    line-height: normal;
+}
+
+.docker.info-card img {
         display: block; 
         margin-left: auto; 
         margin-right: auto; 
@@ -291,11 +300,93 @@
     opacity: 1;
 }       
 
-.page-container .text-section h2,
+.page-container .text-section h1,
 .page-container .title-input,
 .page-container .text-section p
 {
     text-align: left;
     margin-left: 0; 
 }
+
+.drop-area-two {
+    margin-top: 20px !important;
+    margin-bottom: 50px !important;
+}
+
+.downtime-card {
+    display: block; 
+    text-align: left; 
+    overflow: hidden; 
+    text-wrap: auto; 
+    white-space: normal; 
+    padding: 10px 0 20px 20px;
+}
+
+.downtime-card h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: normal;
+    line-height: 20px !important;    
+}
   
+  .downtime-value {
+    font-size: 48px;
+    font-weight: normal;
+    color: #999a9bab;
+    line-height: 15px !important;  
+
+  }
+  
+  .downtime-change {
+    font-size: 24px;
+    font-weight: normal;
+    color: #d82b0c;
+    line-height: 10px !important;  
+
+  }
+
+div .downtime-card h4,
+div .downtime-card .downtime-value,
+div .downtime-card .downtime-change {
+  text-align: left;
+}
+
+//
+
+.incident-card {
+    display: block; 
+    text-align: left; 
+    overflow: hidden; 
+    text-wrap: auto; 
+    white-space: normal; 
+    padding: 10px 0 20px 20px;
+}
+
+.incident-card h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: normal;
+    line-height: 20px !important;    
+}
+  
+  .incident-value {
+    font-size: 48px;
+    font-weight: normal;
+    color: #999a9bab;
+    line-height: 15px !important;  
+
+  }
+  
+  .incident-change {
+    font-size: 24px;
+    font-weight: normal;
+    color: #0c75d8;
+    line-height: 10px !important;  
+
+  }
+
+div .incident-card h4,
+div .incident-card .incident-value,
+div .incident-card .incident-change {
+  text-align: left;
+}
