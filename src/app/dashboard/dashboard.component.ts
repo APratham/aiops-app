@@ -178,7 +178,22 @@ export class DashboardComponent implements OnInit {
     </div>`;
     this.pageContainerItems1[2].content = `<h3>Incidents</h3>
     <p class="incident-value">0</p>
-    <p class="incident-change">&#9888; 0</p>`;
+    <p class="incident-change">&#9888; 0</p>
+    <div class="incidents-status">
+   
+      <span class="open-incidents">5 open</span>
+         <br>
+      <span class="closed-incidents">15 closed </span>
+    </div>
+    <div class="recent-incidents">
+    <p>Recent Incidents:</p>
+      <ul>
+        <li>Network outage - 2024-09-11</li>
+        <li>System slowdown - 2024-09-10</li>
+        <li>API failure - 2024-09-09</li>
+      </ul>
+    </div>
+    `;
     
   }
 

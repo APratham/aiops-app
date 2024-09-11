@@ -390,12 +390,49 @@ div .downtime-card .downtime-change {
 //
 
 .incident-card {
-    display: block; 
-    text-align: left; 
-    overflow: hidden; 
-    text-wrap: auto; 
-    white-space: normal; 
+    display: block;
+    text-align: left;
+    overflow: hidden;
+    text-wrap: auto;
+    white-space: normal;
     padding: 10px 0 20px 20px;
+    position: relative; /* Needed for positioning other elements */
+
+    .incidents-status {
+        position: absolute; /* Position it relative to the card's boundaries */
+        top: 10px; /* Adjust to suit your design */
+        right: 20px; /* Adjust to suit your design */
+        font-size: 18px;
+        color: #000000; /* Adjust color to suit your design */
+    }
+
+    .open-incidents, .closed-incidents {
+ 
+        font-weight: bold !important;
+    }
+
+    .recent-incidents {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        font-size: 12px; /* Smaller font size for recent event listings */
+        color: #666; /* Grey color for less emphasis */
+        text-align: right;
+    }
+    
+    .recent-incidents p {
+        margin: 0; /* Remove margin to save space */
+        font-weight: bold;
+    }
+    
+    .recent-incidents ul {
+        padding: 0; /* Remove padding for alignment */
+        list-style-type: none; /* No bullets for a cleaner look */
+    }
+    
+    .recent-incidents li {
+        margin: 2px 0; /* Small vertical spacing between items */
+    }
 }
 
 .incident-card h3 {
