@@ -194,7 +194,12 @@ export class DashboardComponent implements OnInit {
       </ul>
     </div>
     `;
-    
+    this.pageContainerItems1[3].content = `<h3>Uptime</h3>
+    <div class="progress-container">
+        <div class="progress-bar"></div>
+        25d 0h 0m
+    </div>
+    `;
   }
 
   ngOnInit(): void {

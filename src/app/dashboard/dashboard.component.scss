@@ -361,7 +361,6 @@
 .downtime-card h3 {
     color: #333;
     margin-bottom: 10px;
-    font-weight: normal;
     line-height: 20px !important;    
 }
   
@@ -438,7 +437,6 @@ div .downtime-card .downtime-change {
 .incident-card h3 {
     color: #333;
     margin-bottom: 10px;
-    font-weight: normal;
     line-height: 20px !important;    
 }
   
@@ -462,4 +460,28 @@ div .incident-card h4,
 div .incident-card .incident-value,
 div .incident-card .incident-change {
   text-align: left;
+}
+
+.docker.uptime {
+
+    h3 {
+        color: #333; /* Dark color for the title */
+        margin-bottom: 10px; /* Space below the title for separation */
+    }
+
+    .progress-bar {
+        height: 10px; /* Fixed height for the progress bar */
+        background-color: #44a6f1; /* Green color to indicate positive status */
+        border-radius: 5px; /* Rounded corners */
+        color: white; /* Text color inside the progress bar */
+
+        width: 100%; /* Full width of the progress bar */
+    }
+
+    .progress-container {
+        width: 1000px; /* Full width container */
+        background: none; /* No background to eliminate any unwanted grey area */
+        border-radius: 5px; /* Rounded corners */
+        padding: 0; /* Remove padding if any */
+    }
 }
