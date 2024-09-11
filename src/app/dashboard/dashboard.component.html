@@ -109,7 +109,14 @@
               [cdkDragDisabled]="item.disabled"
               (cdkDragStarted)="onDragStart($event, item)"
               (cdkDragEnded)="onDragEnd($event, item)">
-            {{ item.content }}
+                <canvas *ngIf="item.chartConfig" 
+                baseChart 
+                [data]="item.chartConfig.data" 
+                [options]="item.chartConfig.options" 
+                [type]="item.chartConfig.type">
+                </canvas>
+              
+              
             <div class="example-handle" 
                 cdkDragHandle
                 [ngClass]="{'dragging': isDragging}">

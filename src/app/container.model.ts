@@ -1,3 +1,7 @@
+import 'chartjs-adapter-date-fns';
+import { Chart, ChartTypeRegistry, ChartOptions, ChartType, ChartData, ChartConfiguration } from 'chart.js';
+
+
 export interface ContainerItem {
   id?: string;
   name?: string;
@@ -9,4 +13,12 @@ export interface ContainerItem {
   isDragging?: boolean;
   disabled?: boolean;
   image?: string;
+  chartConfig?: ChartConfiguration<any>;  
+}
+
+
+export interface ChartConfig {
+  type: ChartType;
+  data: ChartData;
+  options: ChartOptions;
 }

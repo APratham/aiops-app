@@ -24,9 +24,12 @@
  * THE SOFTWARE.
  */
 
+import 'chartjs-adapter-date-fns'; // or 'chartjs-adapter-moment' if you prefer Moment.js
+
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CdkDragDrop, CdkDragEnd, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ContainerItem } from '../container.model'
+import { ChartConfiguration, ChartType } from 'chart.js';
 
 
 @Component({
@@ -62,10 +65,10 @@ export class DashboardComponent implements OnInit {
   ];
   
   pageContainerItems2: ContainerItem[] = [
-    { content: 'CPU Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle' },
-    { content: 'Memory Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle' },
+    { content: 'CPU Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle', chartConfig: this.getChartConfig('CPU Usage', 'line')  },
+    { content: 'Memory Anomaly', size: 'rectangle', isDragging: false, disabled: false, type: 'Docker', cardType: 'graph-rectangle', chartConfig: this.getChartConfig('Memory Usage', 'line')  },
   ];
-
+  
   downtimeData = {
     downtime: "0%",
     change: "0%"
@@ -200,15 +203,87 @@ export class DashboardComponent implements OnInit {
         25d 0h 0m
     </div>
     `;
+
+   
   }
 
+  getChartConfig(label: string, type: ChartType): ChartConfiguration<any> {
+    return {
+      type: type,
+      data: {
+        labels: Array.from({ length: 24 }, (_, i) => new Date(2024, 0, 1, i)), // Ensure labels are date objects
+        datasets: [{
+          label: label,
+          data: Array.from({ length: 24 }, (_, i) => ({x: new Date(2024, 0, 1, i), y: Math.random() * 100})), // Use date objects for data points
+          borderColor: 'rgba(75,192,192,1)',
+          backgroundColor: 'rgba(75,192,192,0.2)',
+        }]
+      },
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'hour',
+              displayFormats: {
+                hour: 'HH:mm' // Customize the display format as needed
+              }
+            },
+            title: {
+              display: true,
+              text: 'Time'
+            }
+          },
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Value'
+            }
+          }
+        },
+        plugins: {
+          zoom: {
+            pan: {
+              enabled: true,
+              mode: 'x'
+            },
+            zoom: {
+              wheel: {
+              enabled: true
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'x'
+            }
+          }
+        }
+      }
+  };
+}
+  
+  
+
+
   ngOnInit(): void {
-    window.electron.ipcRenderer.on('container-data', (event, data) => {
+    window.electron.ipcRenderer.on('container-data', (event: any, data: any) => {
       console.log('Received container data:', data);
       this.updateContainerCard(data);  // Add this line
       this.pageContainerItems1[0].disabled = false;
       this.pageContainerItems1[0].type = 'Docker';
       console.log('Updated container card with data:', this.pageContainerItems1[0].content);
     });
+
+    this.pageContainerItems2.forEach(item => {
+      if (item.content === 'CPU Anomaly') {
+        item.chartConfig = this.getChartConfig('CPU Usage', 'line');
+      } else if (item.content === 'Memory Anomaly') {
+        item.chartConfig = this.getChartConfig('Memory Usage', 'line');
+      }
+    });
+
+    //this.pageContainerItems2[0].chartConfig = this.getChartConfig('CPU Usage', 'line');
+    //this.pageContainerItems2[1].chartConfig = this.getChartConfig('Memory Usage', 'line');
   }
 }

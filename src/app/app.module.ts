@@ -32,6 +32,7 @@ import { ChoiceInfoPopoverComponent } from './choicewindow/choice-info-popover/c
 
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { FormsModule } from '@angular/forms';
+import { NgChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -40,7 +41,7 @@ import { FormsModule } from '@angular/forms';
     EventsComponent, IncidentsComponent, LogsComponent, MetricsComponent, OverviewComponent, TeamComponent, UptimeComponent,
     TopBarComponent, 
     PopoverContentDynamicComponent, ChoiceInfoPopoverComponent, DockerInfoPopoverComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, DragDropModule, FormsModule],
+  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, DragDropModule, FormsModule, NgChartsModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
