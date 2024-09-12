@@ -103,6 +103,15 @@
     box-shadow: 0 4px 6px -2px rgba(0, 0, 0, 0.2), 
                 0 7px 10px 0 rgba(0, 0, 0, 0.14), 
                 0 2px 12px 0 rgba(0, 0, 0, 0.12); 
+
+                h3 {
+                    position: absolute; // Absolutely position the title
+                    top: 10px; // Distance from the top of the card
+                    left: 10px; // Distance from the left of the card
+                    margin: 0; // Remove any default margins
+                    color: #333; // Optional: Adjust the color as needed
+                    font-size: 1rem; // Optional: Adjust the font size as needed
+                }            
 }
   
 .example-box:active {
@@ -323,11 +332,11 @@
 
 
         .recovery-time {
-            position: absolute; /* Position it relative to the card's boundaries */
-            top: 10px; /* Adjust to suit your design */
-            right: 20px; /* Adjust to suit your design */
+            position: absolute; 
+            top: 10px; 
+            right: 20px;
             font-size: 18px;
-            color: #000000; /* Adjust color to suit your design */
+            color: #000000; 
         }
 
         .recovery-time-value {
@@ -338,8 +347,8 @@
             position: absolute;
             bottom: 10px;
             right: 20px;
-            font-size: 12px; /* Smaller font size for recent event listings */
-            color: #666; /* Grey color for less emphasis */
+            font-size: 12px; 
+            color: #666; 
             text-align: right;
         }
         
@@ -395,14 +404,14 @@ div .downtime-card .downtime-change {
     text-wrap: auto;
     white-space: normal;
     padding: 10px 0 20px 20px;
-    position: relative; /* Needed for positioning other elements */
+    position: relative; 
 
     .incidents-status {
-        position: absolute; /* Position it relative to the card's boundaries */
-        top: 10px; /* Adjust to suit your design */
-        right: 20px; /* Adjust to suit your design */
+        position: absolute; 
+        top: 10px; 
+        right: 20px; 
         font-size: 18px;
-        color: #000000; /* Adjust color to suit your design */
+        color: #000000; 
     }
 
     .open-incidents, .closed-incidents {
@@ -414,23 +423,23 @@ div .downtime-card .downtime-change {
         position: absolute;
         bottom: 10px;
         right: 20px;
-        font-size: 12px; /* Smaller font size for recent event listings */
-        color: #666; /* Grey color for less emphasis */
+        font-size: 12px; 
+        color: #666; 
         text-align: right;
     }
     
     .recent-incidents p {
-        margin: 0; /* Remove margin to save space */
+        margin: 0; 
         font-weight: bold;
     }
     
     .recent-incidents ul {
-        padding: 0; /* Remove padding for alignment */
-        list-style-type: none; /* No bullets for a cleaner look */
+        padding: 0; 
+        list-style-type: none; 
     }
     
     .recent-incidents li {
-        margin: 2px 0; /* Small vertical spacing between items */
+        margin: 2px 0;
     }
 }
 
@@ -465,23 +474,58 @@ div .incident-card .incident-change {
 .docker.uptime {
 
     h3 {
-        color: #333; /* Dark color for the title */
-        margin-bottom: 10px; /* Space below the title for separation */
+        color: #333; 
+        margin-bottom: 10px; 
     }
 
     .progress-bar {
-        height: 10px; /* Fixed height for the progress bar */
-        background-color: #44a6f1; /* Green color to indicate positive status */
-        border-radius: 5px; /* Rounded corners */
-        color: white; /* Text color inside the progress bar */
+        height: 10px; 
+        background-color: #44a6f1;
+        border-radius: 5px;
+        color: white; 
 
-        width: 100%; /* Full width of the progress bar */
+        width: 100%; 
     }
 
     .progress-container {
-        width: 1000px; /* Full width container */
-        background: none; /* No background to eliminate any unwanted grey area */
-        border-radius: 5px; /* Rounded corners */
-        padding: 0; /* Remove padding if any */
+        width: 1000px;
+        background: none; 
+        border-radius: 5px; 
+        padding: 0; 
     }
+}
+
+.icon-group {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    
+    height: 12px;  
+    grid-template-columns: repeat(3, auto); 
+   
+}
+
+.icon {
+    flex: 0 0 auto; 
+   
+    width: 12px;  
+    height: 12px; 
+    margin-right: 10px;  
+}
+
+.icon:last-child {
+    margin-right: 12 px;
+}
+
+.icon-group::after {
+    content: "";  
+    width: 15px;  
+    display: block;  
+}
+
+.icon:hover {
+    fill: #333; 
 }

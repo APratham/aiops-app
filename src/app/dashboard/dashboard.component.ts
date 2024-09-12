@@ -24,11 +24,11 @@
  * THE SOFTWARE.
  */
 
-import 'chartjs-adapter-date-fns'; // or 'chartjs-adapter-moment' if you prefer Moment.js
+import 'chartjs-adapter-date-fns'; 
 
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { CdkDragDrop, CdkDragEnd, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ContainerItem } from '../container.model'
+import { ContainerItem, ChartConfigOptions } from '../container.model'
 import { ChartConfiguration, ChartType } from 'chart.js';
 
 
@@ -165,7 +165,6 @@ export class DashboardComponent implements OnInit {
   }
 
   updateContainerCard(data: any): void {
-    // Assuming data contains the required fields.
     this.pageContainerItems1[0].content = `Object ID: ${data.id} <br> Name: ${data.name} <br> Type: ${data.type} <img  src="../assets/docker-logo.png">`;
     this.pageContainerItems1[1].content = `<h3>Downtime</h3>
     <p class="downtime-value">0%</p>
@@ -203,11 +202,9 @@ export class DashboardComponent implements OnInit {
         25d 0h 0m
     </div>
     `;
-
-   
   }
 
-  getChartConfig(label: string, type: ChartType): ChartConfiguration<any> {
+  getChartConfig(label: string, type: ChartType, options: ChartConfigOptions = {animate:true}): ChartConfiguration<any> {
     return {
       type: type,
       data: {
@@ -226,7 +223,7 @@ export class DashboardComponent implements OnInit {
             time: {
               unit: 'hour',
               displayFormats: {
-                hour: 'HH:mm' // Customize the display format as needed
+                hour: 'HH:mm' 
               }
             },
             title: {
@@ -243,6 +240,9 @@ export class DashboardComponent implements OnInit {
           }
         },
         plugins: {
+          legend: {
+            display: false 
+          },
           zoom: {
             pan: {
               enabled: true,
@@ -258,12 +258,15 @@ export class DashboardComponent implements OnInit {
             mode: 'x'
             }
           }
+        },
+        animation: {
+          duration: options.animate ? undefined : 0 // Disable or enable animations based on the option
         }
       }
   };
 }
   
-  
+
 
 
   ngOnInit(): void {
@@ -282,6 +285,7 @@ export class DashboardComponent implements OnInit {
         item.chartConfig = this.getChartConfig('Memory Usage', 'line');
       }
     });
+
 
     //this.pageContainerItems2[0].chartConfig = this.getChartConfig('CPU Usage', 'line');
     //this.pageContainerItems2[1].chartConfig = this.getChartConfig('Memory Usage', 'line');
