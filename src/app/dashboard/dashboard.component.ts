@@ -91,7 +91,12 @@ export class DashboardComponent implements OnInit {
 
 
   toggleSideContainer(): void {
-    this.sideContainerVisible = !this.sideContainerVisible;
+    
+
+    if (this.currentTab ==='overview') {
+      this.sideContainerVisible = !this.sideContainerVisible; } else {
+        this.sideContainerVisible=false;
+      }
   }
 
   toggleEditMode(): void {
@@ -135,27 +140,17 @@ export class DashboardComponent implements OnInit {
     }
 
   }
-  
-
-
+ 
   selectTab(tabName: string): void {
     if (this.viewInitialized) {
       console.log("Tab selected: ", tabName); // Debug log
       this.currentTab = tabName;
       this.activeMenuItem = tabName; // Set active menu item
+      this.toggleSideContainer(); // Close the side container
       this.loadComponent(tabName); 
     }
   }
 
-/**   getSideItemClass(item: ContainerItem): string {
-    return `side-item ${item.size}`;
-  } */
-  
-/**   getPreviewClass(item: ContainerItem): string {
-    return `custom-preview preview-${item.size}`;
-  } */
-
-  
     loadComponent(tabName: string): void {
       if (!this.dynamicLoad) {
         console.error("dynamicLoad is not initialized.");
@@ -183,9 +178,7 @@ export class DashboardComponent implements OnInit {
       const componentRef = this.dynamicLoad.createComponent(componentFactory);
       console.log("Component loaded: ", componentRef.instance);
     }
-    
-    
-
+ 
   onDrop(event: CdkDragDrop<any[]>) {
     let draggedItem = event.item.data;
   
@@ -326,9 +319,6 @@ export class DashboardComponent implements OnInit {
       }
   };
 }
-  
-
-
 
   ngOnInit(): void {
     window.electron.ipcRenderer.on('container-data', (event: any, data: any) => {
@@ -355,8 +345,8 @@ export class DashboardComponent implements OnInit {
       { content: 'Loading Memory...', size: 'rectangle', isDragging: false, disabled: true, placeholder: true, title: 'Memory Load', numBars: 3 },
       { content: 'Loading Network...', size: 'square', isDragging: false, disabled: true, placeholder: true, title: 'Network', numBars: 4 },
       { content: 'Loading Metrics...', size: 'rectangle', isDragging: false, disabled: true, placeholder: true, title: 'Metrics Overview', numBars: 3 },
-      { size: 'large-square', isDragging: false, disabled: false, color: '#68163f' }, // Coral
-      { size: 'rectangle', isDragging: false, disabled: false, color: '#f6b5c9' }  // Light Green
+      { size: 'large-square', isDragging: false, disabled: false, color: '#68163f' }, 
+      { size: 'rectangle', isDragging: false, disabled: false, color: '#f6b5c9' }  
     );
   }
 }

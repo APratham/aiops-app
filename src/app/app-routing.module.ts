@@ -9,14 +9,17 @@ import { SettingsComponent } from './settings/settings.component';
 import { AccountComponent } from './settings/account/account.component';
 import { ApplicationComponent } from './settings/application/application.component';
 import { ThemeComponent } from './settings/theme/theme.component';
+
+import { EventsComponent } from './events/events.component';
+import { MetricsComponent } from './metrics/metrics.component';
+import { LogsComponent } from './logs/logs.component';
+import { IncidentsComponent } from './incidents/incidents.component';
+
 import { ChoicewindowComponent } from './choicewindow/choicewindow.component';
 
 
 import { AuthGuard } from './auth.guard';  // Import the AuthGuard
 import { NotFoundGuard } from './not-found.guard'; 
-import { EventsComponent } from './events/events.component';
-import { MetricsComponent } from './metrics/metrics.component';
-import { LogsComponent } from './logs/logs.component';
 
 const routes: Routes = [
   {
@@ -64,6 +67,12 @@ const routes: Routes = [
     data: { title: 'Logs' },
     canActivate: [AuthGuard]  // Protect the logs route with the AuthGuard
   },
+  {
+    path: 'incidents',
+    component: IncidentsComponent,
+    data: { title: 'Incidents' },
+    canActivate: [AuthGuard]  // Protect the incidents route with the AuthGuard
+},  
   {
     path: 'settings',
     component: SettingsComponent,
