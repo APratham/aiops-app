@@ -53,8 +53,7 @@ export class DashboardComponent implements OnInit {
   @ViewChild('pageList2') pageList2!: CdkDropList;
 
   sideContainerItems: ContainerItem[] = [
-    { content: 'Item 1', size: 'square', isDragging: false, disabled: false },
-    { content: 'Item 2', size: 'rectangle', isDragging: false, disabled: false },
+
   ];
 
   pageContainerItems1: ContainerItem[] = [
@@ -110,6 +109,23 @@ export class DashboardComponent implements OnInit {
     }
     return classes;
   }
+
+  getPlaceholderClass(item: ContainerItem): string {
+
+    switch (item.numBars) {
+      case 2:
+        return 'placeholder-content placeholder-two-bars';
+      case 3: 
+        return 'placeholder-content placeholder-three-bars';
+      case 4:
+        console.log('placeholder-content placeholder-four-bars'); 
+        return 'placeholder-content placeholder-four-bars';
+      default:
+        return 'placeholder-content placeholder-four-bars'; 
+    }
+
+  }
+  
   
 
   selectTab(tabName: string): void {
@@ -286,8 +302,16 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-
     //this.pageContainerItems2[0].chartConfig = this.getChartConfig('CPU Usage', 'line');
     //this.pageContainerItems2[1].chartConfig = this.getChartConfig('Memory Usage', 'line');
+
+    this.sideContainerItems.push(
+      { content: 'Loading CPU...', size: 'rectangle', isDragging: false, disabled: true, placeholder: true, title: 'CPU Load', numBars: 3 },
+      { content: 'Loading Memory...', size: 'rectangle', isDragging: false, disabled: true, placeholder: true, title: 'Memory Load', numBars: 3 },
+      { content: 'Loading Network...', size: 'square', isDragging: false, disabled: true, placeholder: true, title: 'Network', numBars: 4 },
+      { content: 'Loading Metrics...', size: 'rectangle', isDragging: false, disabled: true, placeholder: true, title: 'Metrics Overview', numBars: 3 },
+      { size: 'large-square', isDragging: false, disabled: false, color: '#68163f' }, // Coral
+      { size: 'rectangle', isDragging: false, disabled: false, color: '#f6b5c9' }  // Light Green
+    );
   }
 }

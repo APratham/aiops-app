@@ -529,3 +529,68 @@ div .incident-card .incident-change {
 .icon:hover {
     fill: #333; 
 }
+
+.placeholder-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+
+    .placeholder-two-bars .loading-bar:nth-child(n+3) {
+        display: none; // Hides the third bar and beyond
+      }
+      
+      .placeholder-three-bars .loading-bar:nth-child(n+4) {
+        display: none; // Hides the fourth bar and beyond
+      }
+      
+      .placeholder-four-bars .loading-bar {
+        // No bars are hidden; all are displayed
+      }
+  }
+  
+  .loading-bar {
+    background-color: #e0e0e0;
+    height: 10px;
+    width: 100%;
+    border-radius: 5px;
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  
+  .loading-bar.short {
+    width: 80%; // Shorter bar for variation
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .card-title {
+    position: absolute; // Absolutely position the title
+    top: 10px; // Distance from the top of the card
+    left: 10px; // Distance from the left of the card
+    margin: 0; // Remove any default margins
+    color: #333; // Optional: Adjust the color as needed
+    font-size: 12px; // Optional: Adjust the font size as needed
+  }
+
+  .dark-handle {
+    color: black; // Changes the handle color to black
+    // If the handle uses SVG or other elements, target them specifically:
+    svg {
+      fill: black; // Change SVG color if applicable
+    }
+  }
+  
+
+
+
+  
+  
