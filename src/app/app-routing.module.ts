@@ -14,6 +14,9 @@ import { ChoicewindowComponent } from './choicewindow/choicewindow.component';
 
 import { AuthGuard } from './auth.guard';  // Import the AuthGuard
 import { NotFoundGuard } from './not-found.guard'; 
+import { EventsComponent } from './events/events.component';
+import { MetricsComponent } from './metrics/metrics.component';
+import { LogsComponent } from './logs/logs.component';
 
 const routes: Routes = [
   {
@@ -42,6 +45,24 @@ const routes: Routes = [
     component: ChoicewindowComponent,
     data: { title: 'Choose container' },
     canActivate: [AuthGuard]  // Protect the dashboard route with the AuthGuard
+  },
+  {
+    path: 'events',
+    component: EventsComponent,
+    data: { title: 'Events' },
+    canActivate: [AuthGuard]  // Protect the events route with the AuthGuard
+  },
+  {
+    path: 'metrics',
+    component: MetricsComponent,
+    data: { title: 'Metrics' },
+    canActivate: [AuthGuard]  // Protect the metrics route with the AuthGuard
+  },
+  {
+    path: 'logs',
+    component: LogsComponent, 
+    data: { title: 'Logs' },
+    canActivate: [AuthGuard]  // Protect the logs route with the AuthGuard
   },
   {
     path: 'settings',

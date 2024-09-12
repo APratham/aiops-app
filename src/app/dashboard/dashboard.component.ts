@@ -26,10 +26,13 @@
 
 import 'chartjs-adapter-date-fns'; 
 
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { CdkDragDrop, CdkDragEnd, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ContainerItem, ChartConfigOptions } from '../container.model'
 import { ChartConfiguration, ChartType } from 'chart.js';
+import { EventsComponent } from '../events/events.component';
+import { MetricsComponent } from '../metrics/metrics.component';
+import { LogsComponent } from '../logs/logs.component';
 
 
 @Component({
@@ -48,7 +51,9 @@ export class DashboardComponent implements OnInit {
   activeMenuItem: string = 'overview';
   isDragging: boolean = false;
 
+  viewInitialized: boolean = false;  // Add this line to define the property
 
+  @ViewChild('dynamicLoad', { read: ViewContainerRef }) dynamicLoad!: ViewContainerRef;
   @ViewChild('pageList1') pageList1!: CdkDropList;
   @ViewChild('pageList2') pageList2!: CdkDropList;
 
@@ -75,10 +80,15 @@ export class DashboardComponent implements OnInit {
   
   sideContainerVisible = true;
 
+  constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+
   ngAfterViewInit() {
+    this.viewInitialized = true;
     this.pageList1.data = this.pageContainerItems1;
     this.pageList2.data = this.pageContainerItems2;
-  }
+    this.loadComponent(this.currentTab);
+}
+
 
   toggleSideContainer(): void {
     this.sideContainerVisible = !this.sideContainerVisible;
@@ -126,11 +136,15 @@ export class DashboardComponent implements OnInit {
 
   }
   
-  
+
 
   selectTab(tabName: string): void {
-    this.currentTab = tabName;
-    this.activeMenuItem = tabName; // Set active menu item
+    if (this.viewInitialized) {
+      console.log("Tab selected: ", tabName); // Debug log
+      this.currentTab = tabName;
+      this.activeMenuItem = tabName; // Set active menu item
+      this.loadComponent(tabName); 
+    }
   }
 
 /**   getSideItemClass(item: ContainerItem): string {
@@ -140,6 +154,37 @@ export class DashboardComponent implements OnInit {
 /**   getPreviewClass(item: ContainerItem): string {
     return `custom-preview preview-${item.size}`;
   } */
+
+  
+    loadComponent(tabName: string): void {
+      if (!this.dynamicLoad) {
+        console.error("dynamicLoad is not initialized.");
+        return;
+      }
+    
+      let componentFactory;
+      switch (tabName) {
+        case 'events':
+          componentFactory = this.componentFactoryResolver.resolveComponentFactory(EventsComponent);
+          break;
+        case 'metrics':
+          componentFactory = this.componentFactoryResolver.resolveComponentFactory(MetricsComponent);
+          break;
+        case 'logs':
+          componentFactory = this.componentFactoryResolver.resolveComponentFactory(LogsComponent);
+          break;
+        default:
+          this.dynamicLoad.clear();
+          console.log("Cleared dynamic load");
+          return;
+      }
+    
+      this.dynamicLoad.clear();
+      const componentRef = this.dynamicLoad.createComponent(componentFactory);
+      console.log("Component loaded: ", componentRef.instance);
+    }
+    
+    
 
   onDrop(event: CdkDragDrop<any[]>) {
     let draggedItem = event.item.data;

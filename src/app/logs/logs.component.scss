@@ -1,0 +1,13 @@
+.logs-container {
+ flex-grow: 1;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+ align-items: flex-start;
+ background-color: rgba(255, 255, 255, 0.9);
+ border-radius: 10px;
+ padding: 0px; /* Adjust padding */
+ transition: flex-grow 0.3s ease;
+ height: 530px; /* Fill the parent container */
+ margin-bottom: 0px;
+}

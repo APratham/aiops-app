@@ -68,8 +68,10 @@
           <button (click)="selectTab('metrics')" [ngClass]="{'active': activeMenuItem === 'metrics'}">Metrics</button>
           <button (click)="selectTab('logs')" [ngClass]="{'active': activeMenuItem === 'logs'}">Logs</button>
         </div>
+        
       </div>
-
+      
+      <ng-template #dynamicLoad></ng-template>
       <div *ngIf="currentTab === 'overview'">
       <!-- Include content for Overview tab -->
 
@@ -166,24 +168,12 @@
       </div>
 
       <div *ngIf="currentTab === 'events'">
-      <!-- Include content for Events tab -->
-
-        <div class="text-section">Only this section will remain the same.</div>
-        <div class="text-section">Only this section will remain the same.</div>
-        <div class="text-section">Only this section will remain the same.</div>
-        <div class="text-section">Only this section will remain the same.</div>
       </div>
 
       <div *ngIf="currentTab === 'metrics'">
-      <!-- Include content for Metrics tab -->
-
-        <div class="text-section">Only this section will remain the same.</div>
       </div>
 
       <div *ngIf="currentTab === 'logs'">
-      <!-- Include content for Logs tab -->
-
-        <div class="text-section">Only this section will remain the same.</div>
       </div> 
 </div>
 

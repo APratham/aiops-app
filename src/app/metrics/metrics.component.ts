@@ -9,6 +9,11 @@ export class MetricsComponent  implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    
+    console.log("Metrics loaded");
+
+
+  }
 
 }
