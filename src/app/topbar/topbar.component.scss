@@ -40,8 +40,7 @@ ion-header {
 
 /* topbar.component.scss */
 ::ng-deep .popover-menu {
-  --background: #2c3e50; /* Darker background color */
-  --border-radius: 4px; /* Slightly rounded corners */
+  --border-radius: 20px; /* Slightly rounded corners */
   --width: 200px; /* Custom width */
   --height: auto; /* Auto height depending on content */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for a more desktop-like feel */
@@ -52,8 +51,9 @@ ion-header {
   --border-color: transparent !important; /* Ensure border color is transparent */
   --border-style: none !important; /* Explicitly set border style to none */
   padding: 10px 15px; /* Adjust padding between items */
-  color: #ecf0f1; /* Light text color for contrast against the dark background */
+  color: black; /* Default text color to black */
   --background: transparent !important; /* Ensure the background is transparent */
+  font-weight: normal; /* Make the text weight normal for clarity */
 }
 
 ::ng-deep .popover-menu ion-item::after {
@@ -66,8 +66,9 @@ ion-header {
 }
 
 ::ng-deep .popover-menu ion-item:hover {
-  background-color: #34495e; /* Darker background color on hover */
-  color: #ecf0f1; /* Text color stays the same on hover */
+  background-color: #824260; /* Darker background color on hover */
+  color: white; /* Text color changes to white on hover */
+  cursor: pointer; /* Change cursor to pointer for better feedback */
 }
 
 ::ng-deep .popover-menu ion-list {
@@ -77,14 +78,13 @@ ion-header {
 
 ion-buttons[slot="secondary"] ion-button {
   --background: #bc296d;
-  --color: black; /* Or any color you prefer */
+  --color: black; /* Default button text color */
   font-weight: bold;
   border-radius: 10px;
   font-size: 16px;
-  --border-radius: 5px; /* Makes the buttons rounded */
-  transition: background-color 0.2s ease; /* Smooth transition effect */
+  --border-radius: 5px; /* Slightly rounded buttons */
+  transition: background-color 0.2s ease, color 0.2s ease; /* Smooth transition for background and text color */
   opacity: 0.6; /* Slightly transparent */
-
 }
 
 ion-buttons[slot="secondary"] ion-button:hover {
@@ -107,3 +107,4 @@ ion-buttons[slot="end"] ion-button:hover {
   --border-radius: 50%; /* Round the button */
   border-radius: 10px;
 }
+
