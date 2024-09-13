@@ -6,6 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./incidents.component.scss'],
 })
 export class IncidentsComponent  implements OnInit {
+  activeSegment: string = 'open';
+  
+  onSegmentChange(segment: any) {
+    this.activeSegment = segment.detail.value;
+  }
 
   constructor() { }
 

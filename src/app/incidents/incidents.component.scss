@@ -1,32 +1,39 @@
 @import '/src/app/auth-styles.scss';
 
 .incidents-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: calc(100vh - 96px);
-  width: calc(100vw - 20px);
-  background-color: rgba(255, 255, 255, 0.95); 
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
-  transition: box-shadow 0.3s ease;
-  margin: 56px auto 20px auto;
-  max-width: 95%;
-  max-height: 90%;
-  color: #000000;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ height: calc(100vh - 96px);
+ width: calc(100vw - 20px);
+ background-color: rgba(255, 255, 255, 0.95); 
+ border-radius: 10px;
+ padding: 20px;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+ transition: box-shadow 0.3s ease;
+ margin: 56px auto 20px auto;
+ max-width: 95%;
+ max-height: 90%;
+ color: #000000;
 }
 
+
 .table-container {
- background: #ffffff;  
- box-shadow: 0 2px 10px rgba(0,0,0,0.1);
- padding: 1rem;
- border: 1px solid #797979; 
- overflow: hidden; 
+ display: block;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ height: calc(100vh - 96px);
+ width: calc(100vw - 20px);
+ background-color: rgba(255, 255, 255, 0.95); 
+ border-radius: 10px;
+ padding: 20px;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+ transition: box-shadow 0.3s ease;
+ max-width: 100%;
+ max-height: 100%;
  color: #000000;
- border: 2px solid #c0c0c0;  /* Red border for visibility */
- border-radius: 8px; 
 }
 
 /* Table properties */
@@ -95,4 +102,75 @@ button {
  font-size: 0.9em; /* Smaller font size */
  margin: 2px; /* Spacing between chips */
  background-color: #31dc39; // Green color, to make it easier to detect
+}
+
+ion-header {
+ border-bottom: 1px solid #ccc;
+}
+
+ion-toolbar {
+ width: 100%;  // Ensure toolbar takes full width of its container
+}
+
+ion-segment {
+ --indicator-color: var(--ion-color-primary);
+ --color-checked: var(--ion-color-primary);
+}
+
+ion-searchbar {
+ --background: #e8e3e3;
+ --placeholder-color: #3d3d3d;
+ margin-bottom: 20px;  // Ensure there's space between search bar and table
+}
+
+.incidents-container {
+ padding: 20px;
+ overflow: auto; // Adding scroll if needed without affecting the table
+}
+
+.table-container {
+ margin-top: 20px; // Ensuring space between search bar and table
+ border: 1px solid #ccc;
+ box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+ border-radius: 8px;
+ overflow: hidden;
+}
+
+/* Ensure existing table styles do not change */
+table {
+ width: 100%;
+ border-collapse: collapse;
+}
+
+th, td {
+ padding: 12px;
+ text-align: left;
+}
+
+.chip {
+ background-color: #31dc39;
+ color: #fff;
+ border-radius: 25px;
+ padding: 0.5em 1em;
+}
+
+table {
+ width: 100%;
+ margin-top: 0px;  // Remove margin-top if it's not needed
+ border-collapse: collapse;
+ th, td {
+   padding: 12px;
+   border-bottom: 2px solid #c0c0c0;
+ }
+ thead th {
+   border-bottom: 2px solid #c0c0c0;
+ }
+}
+
+.chip {
+ background-color: #31dc39;
+ color: #fff;
+ border-radius: 25px;
+ padding: 0.5em 1em;
+ display: inline-block;
 }

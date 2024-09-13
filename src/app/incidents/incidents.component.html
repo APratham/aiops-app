@@ -1,6 +1,28 @@
 <ion-app>
+  
   <ion-content>
+
     <div class="incidents-container">
+      <ion-toolbar>
+        <ion-title>Incidents</ion-title>
+      </ion-toolbar>
+      <ion-toolbar>
+        <ion-segment [(ngModel)]="activeSegment" (ionChange)="onSegmentChange($event)" mode="md">          
+          <ion-segment-button value="open" checked>
+            Open Alerts
+          </ion-segment-button>
+          <ion-segment-button value="closed">
+            Closed Alerts
+          </ion-segment-button>
+        </ion-segment>
+      </ion-toolbar>
+      <div class="table-container" *ngIf="activeSegment == 'open'">
+      <ion-toolbar>
+        <ion-searchbar placeholder="Search alarms"></ion-searchbar>
+      </ion-toolbar>
+      <div></div>
+      <div></div>
+      <div></div>
       <table>
           <thead>
               <tr>
@@ -43,6 +65,55 @@
               <!-- Additional rows can be added here -->
           </tbody>
       </table>
-  </div>
+      </div>
+       <div class="table-container" *ngIf="activeSegment == 'closed'"> 
+        <ion-toolbar>
+          <ion-searchbar placeholder="Search closed"></ion-searchbar>
+        </ion-toolbar>
+
+        <table>
+            <thead>
+                <tr>
+                    <th> </th>
+                    <th>Name</th>
+                    <th>State</th>
+                    <th>Severity</th>
+                    <th>Category</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="cpu_icon.png" alt="CPU Icon"></td>
+                    <td>CPU Utilization</td>
+                    <td>Open</td>
+                    <td class="critical">
+                      <div class="chip">Critical</div>
+                    </td>
+                    <td>Resource</td>
+                    <td>5:00 PM, 1/10/2023</td>
+                    <td>1h 30m</td>
+                    <td><button>View details</button></td>
+                </tr>
+                <tr>
+                  <td><img src="cpu_icon.png" alt="CPU Icon"></td>
+                  <td>CPU Utilization</td>
+                  <td>Open</td>
+                  <td class="critical">
+                    <div class="chip">Critical</div>
+                    
+                  </td>
+                  <td >Resource</td>
+                  <td>5:00 PM, 1/10/2023</td>
+                  <td>1h 30m</td>
+                  <td><button>View details</button></td>
+              </tr>
+                <!-- Additional rows can be added here -->
+            </tbody>
+        </table>
+      </div>
+    </div>  
   </ion-content>
 </ion-app>

@@ -294,7 +294,7 @@ ipcMain.on('open-new-window', (event, arg) => {
     }
   });
 
-  choiceWindow.loadURL(`${BASE_URL}/incidents`); // Change to dashboard to test APIs
+  choiceWindow.loadURL(`${BASE_URL}/choicewindow`); // Change to dashboard to test APIs
 
   choiceWindow.on('closed', () => {
     choiceWindow = null;

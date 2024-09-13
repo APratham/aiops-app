@@ -3,25 +3,30 @@
     <ion-buttons slot="start">
       <img src="{{ logo }}" alt="Logo" class="logo" *ngIf="isAuthenticated()" />
     </ion-buttons>
+    
+    <ion-buttons slot="secondary" *ngIf="isAuthenticated()">
+      <ion-button (click)="navigateTo('/dashboard')">Dashboard</ion-button>
+      <ion-button (click)="navigateTo('/alerts')">Alerts</ion-button>
+      <ion-button (click)="navigateTo('/incidents')">Incidents</ion-button>
+      <ion-button (click)="navigateTo('/logs')">Logs</ion-button>
+    </ion-buttons>
     <ion-title *ngIf="isAuthenticated()">{{ title }}</ion-title>
+
     <ion-buttons slot="end" *ngIf="isAuthenticated()">
+      <!-- Add the bell notification button -->
+      <ion-button (click)="onNotificationClick()">
+        <ion-icon name="notifications-outline" size="large"></ion-icon>
+      </ion-button>
+
+      <!-- Add the question mark/help button -->
+      <ion-button (click)="onHelpClick()">
+        <ion-icon name="help-circle-outline" size="large"></ion-icon>
+      </ion-button>
+
+      <!-- Profile button -->
       <ion-button (click)="presentPopover($event)">
         <img src="{{ profilePic }}" alt="Profile Picture" class="profile-pic" />
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
-<!-- Your main content area -->
-<ion-content id="main-content">
-  <!-- The rest of your page content goes here -->
-</ion-content>
-
-<!-- Inline template for popover content -->
-<ng-template #popoverTemplate>
-  <ion-list>
-    <ion-item (click)="navigateTo('/profile')">Profile</ion-item>
-    <ion-item (click)="navigateTo('/settings')">Settings</ion-item>
-    <ion-item (click)="logout()">Logout</ion-item>
-  </ion-list>
-</ng-template>

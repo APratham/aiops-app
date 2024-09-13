@@ -66,8 +66,34 @@ export class TopBarComponent implements OnInit {
   }
 
   navigateTo(route: string) {
-    this.navCtrl.navigateForward(route);
+    // Add cases for the new routes you want to handle
+    switch(route) {
+      case '/dashboards':
+        this.navCtrl.navigateForward('/dashboards');
+        break;
+      case '/alarms':
+        this.navCtrl.navigateForward('/alarms');
+        break;
+      case '/insights':
+        this.navCtrl.navigateForward('/insights');
+        break;
+      case '/events':
+        this.navCtrl.navigateForward('/events');
+        break;
+      default:
+        this.navCtrl.navigateForward(route);
+    }
   }
+
+  onNotificationClick() {
+    // Navigate to the notifications page or handle the notification logic
+  }
+  
+  onHelpClick() {
+    // Navigate to a help or FAQ page, or show a modal with help information
+  }
+  
+  
 
   logout() {
     if (this.ipcRenderer) {

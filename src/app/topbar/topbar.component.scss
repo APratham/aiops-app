@@ -75,5 +75,35 @@ ion-header {
   --border-color: transparent; /* Remove any borders from the list */
 }
 
+ion-buttons[slot="secondary"] ion-button {
+  --background: #bc296d;
+  --color: black; /* Or any color you prefer */
+  font-weight: bold;
+  border-radius: 10px;
+  font-size: 16px;
+  --border-radius: 5px; /* Makes the buttons rounded */
+  transition: background-color 0.2s ease; /* Smooth transition effect */
+  opacity: 0.6; /* Slightly transparent */
 
+}
 
+ion-buttons[slot="secondary"] ion-button:hover {
+  background-color: #b85d88;
+  opacity: 1; /* Fully opaque on hover */
+}
+
+ion-toolbar {
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+ion-icon {
+  font-size: 24px; /* Customize the size of the icons */
+  color: black; /* Icon color */
+}
+
+ion-buttons[slot="end"] ion-button:hover {
+  background-color: #e0e0e0; /* Light background on hover */
+  --border-radius: 50%; /* Round the button */
+  border-radius: 10px;
+}
