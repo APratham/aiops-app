@@ -1,3 +1,76 @@
+<!-- events.component.html -->
 <div class="events-container">
-
+  <ion-toolbar>
+    <ion-title>Events</ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="activeSegment" (ionChange)="onSegmentChange($event)" mode="md">          
+      <ion-segment-button value="open" checked>
+        Open Events
+      </ion-segment-button>
+      <ion-segment-button value="closed">
+        Closed Events
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  
+  <!-- Open Events Table -->
+  <div class="table-container" *ngIf="activeSegment == 'open'">
+    <ion-toolbar>
+      <ion-searchbar placeholder="Search events"></ion-searchbar>
+    </ion-toolbar>
+    <table>
+      <thead>
+          <tr>
+              <th>Name</th>
+              <th>Severity</th>
+              <th>Start Time</th>
+              <th>Status</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let event of events">
+              <td>{{ event.name }}</td>
+              <td>
+                <div class="chip {{ event.severity }}">{{ event.severity }}</div>
+              </td>
+              <td>{{ event.startTime }}</td>
+              <td>
+                <ion-select [(ngModel)]="event.status" (ionChange)="changeStatus(event, event.status)">
+                  <ion-select-option value="New">New</ion-select-option>
+                  <ion-select-option value="In Progress">In Progress</ion-select-option>
+                  <ion-select-option value="Closed">Closed</ion-select-option>
+                </ion-select>
+              </td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Closed Events Table -->
+  <div class="table-container" *ngIf="activeSegment == 'closed'"> 
+    <ion-toolbar>
+      <ion-searchbar placeholder="Search closed events"></ion-searchbar>
+    </ion-toolbar>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Severity</th>
+                <th>Start Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let event of closedEvents">
+                <td>{{ event.name }}</td>
+                <td>
+                  <div class="chip {{ event.severity }}">{{ event.severity }}</div>
+                </td>
+                <td>{{ event.startTime }}</td>
+                <td>{{ event.status }}</td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
 </div>

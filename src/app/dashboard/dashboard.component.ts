@@ -237,9 +237,9 @@ export class DashboardComponent implements OnInit {
     <p class="incident-change">&#9888; 0</p>
     <div class="incidents-status">
    
-      <span class="open-incidents">5 open</span>
+      <span class="open-incidents">0 open</span>
          <br>
-      <span class="closed-incidents">15 closed </span>
+      <span class="closed-incidents">4 closed </span>
     </div>
     <div class="recent-incidents">
     <p>Recent Incidents:</p>
