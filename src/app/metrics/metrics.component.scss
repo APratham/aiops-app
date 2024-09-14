@@ -10,4 +10,140 @@
  transition: flex-grow 0.3s ease;
  height: 530px; /* Fill the parent container */
  margin-bottom: 0px;
+
+ h2 {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+  padding: 20px 20px;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 10px;
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  padding: 0px 20px;
+}
+
+.footer {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #757575;
+  text-align: left;
+  margin: 20px;
+  padding: 20px 20px;
+  border-top: 2px solid #9f9f9f;
+}
+
+.metrics-table {
+ width: 100%; /* Adjust width as needed */
+ border-collapse: collapse; /* Ensures borders between cells are merged */
+}
+
+.metrics-table td {
+ padding: 10px; /* Spacing inside each cell */
+ vertical-align: top; /* Aligns content to the top of the cell */
+}
+
+.custom-checkbox {
+ display: flex;
+ align-items: center;
+ font-size: 16px;
+ cursor: pointer;
+ width: 100%; /* Checkbox label uses full width of the grid column */
+}
+
+
+.custom-checkbox input[type="checkbox"] {
+ opacity: 0;
+ width: 0;
+ height: 0;
+}
+
+.custom-checkbox .checkmark {
+ width: 40px;
+ height: 40px;
+ background-color: #ccc; /* Default un-checked color */
+ margin-right: 10px;
+ border-radius: 8px; /* Optional: for rounded checkboxes */
+ position: relative;
+ transition: background-color 0.3s ease;
+}
+
+.custom-checkbox input[type="checkbox"]:checked + .checkmark {
+ background-color: #4CAF50; /* Checked color */
+}
+
+.custom-checkbox:hover input[type="checkbox"]:checked + .checkmark {
+ background-color: #369636; /* Darker green when hovered */
+}
+
+.custom-checkbox input[type="checkbox"]:disabled + .checkmark {
+ background-color: #e0e0e0; /* Grey background for disabled checkbox */
+ cursor: not-allowed; /* Changes cursor to indicate it's not interactive */
+}
+
+.custom-checkbox input[type="checkbox"]:disabled + .checkmark:after {
+ display: block; /* Ensure the checkmark is always visible */
+ border-color: #ccc; /* Adjust if a different color is needed */
+}
+
+.custom-checkbox input[type="checkbox"]:disabled {
+ cursor: not-allowed;
+}
+
+.custom-checkbox .checkmark:after {
+ content: "";
+ position: absolute;
+ display: none;
+ left: 12px; /* Adjusted for the larger size */
+ top: 8px; /* Adjusted for the larger size */
+ width: 12px; /* Adjusted for the larger size */
+ height: 18px; /* Adjusted for the larger size */
+ border: solid white;
+ border-width: 0 3px 3px 0;
+ transform: rotate(45deg);
+ transition: opacity 0.3s ease;
+}
+
+.custom-checkbox input[type="checkbox"]:checked + .checkmark:after {
+ display: block;
+}
+
+
+}
+
+.events-container {
+ flex-grow: 1;
+ display: flex;
+ flex-direction: column;
+ justify-content: flex-start;
+ align-items: flex-start;
+ background-color: rgba(255, 255, 255, 0.9);
+ border-radius: 10px;
+ padding: 0px; /* Adjust padding */
+ transition: flex-grow 0.3s ease;
+ height: 500px; /* Fill the parent container */
+ margin-bottom: 0px;
+}
+
+.table-container {
+ display: block;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ height: calc(100vh - 96px);
+ width: calc(100vw - 20px);
+ background-color: rgba(255, 255, 255, 0.95); 
+ border-radius: 10px;
+ padding: 20px;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+ transition: box-shadow 0.3s ease;
+ max-width: 100%;
+ max-height: 100%;
+ color: #000000;
 }
