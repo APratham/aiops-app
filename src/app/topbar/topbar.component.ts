@@ -10,8 +10,8 @@ import { DashboardStateService } from '../dashboard-state.service';
   styleUrls: ['./topbar.component.scss'],
 })
 export class TopBarComponent implements OnInit {
-  @Input() title: string = 'Default Title';
-  @Input() logo: string = '/assets/logo.svg';
+  @Input() title: string = 'AIOps Container Monitoring';
+  @Input() logo: string = '/assets/icon/aiops-bg.png';
   profilePic: string = 'assets/profile/avatar.jpg';
   userInfo: any = null;
   isDashboard: boolean = false;
