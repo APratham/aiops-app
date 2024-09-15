@@ -4,7 +4,7 @@
       <img src="{{ logo }}" alt="Logo" class="logo" *ngIf="isAuthenticated()" />
     </ion-buttons>
     
-    <ion-buttons slot="secondary" *ngIf="isAuthenticated()">
+    <ion-buttons slot="secondary" *ngIf="isDashboard">
       <ion-button (click)="navigateTo('/dashboard')">Dashboard</ion-button>
       <ion-button (click)="navigateTo('/alerts')">Alerts</ion-button>
       <ion-button (click)="navigateTo('/incidents')">Incidents</ion-button>

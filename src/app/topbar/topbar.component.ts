@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, Inject } from '@angular/core';
 import { NavController, MenuController, PopoverController } from '@ionic/angular';
 import { UserInfoService } from '../user-info.service';
+import { DashboardStateService } from '../dashboard-state.service';
+
 
 @Component({
   selector: 'app-top-bar',
@@ -12,13 +14,16 @@ export class TopBarComponent implements OnInit {
   @Input() logo: string = '/assets/logo.svg';
   profilePic: string = 'assets/profile/avatar.jpg';
   userInfo: any = null;
+  isDashboard: boolean = false;
+
   ipcRenderer = (window as any).electron.ipcRenderer;
 
   constructor(
     private userInfoService: UserInfoService,
     private menu: MenuController,
     private popoverCtrl: PopoverController,
-    private navCtrl: NavController  // Inject NavController for navigation
+    private navCtrl: NavController,  // Inject NavController for navigation
+    private dashboardStateService: DashboardStateService
   ) {}
 
   ngOnInit() {
@@ -39,6 +44,10 @@ export class TopBarComponent implements OnInit {
         }
       });
     }
+
+    this.dashboardStateService.isDashboard$.subscribe(isDashboard => {
+      this.isDashboard = isDashboard;
+    });
   }
 
   isAuthenticated(): boolean {
