@@ -1,3 +1,84 @@
 <div class="logs-container">
+  <ion-toolbar>
+    <ion-title>Logs</ion-title>
+    <p>Aggregated logs from across your environment</p>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="activeSegment" (ionChange)="onSegmentChange($event)" mode="md">          
+      <ion-segment-button value="all" checked>
+        All Logs
+      </ion-segment-button>
+      <ion-segment-button value="error">
+        Errors
+      </ion-segment-button>
+      <ion-segment-button value="warn">
+        Warnings
+      </ion-segment-button>      
+      <ion-segment-button value="info">
+        Info
+      </ion-segment-button>      
+      <ion-segment-button value="debug">
+        Debug
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
+    <!-- Search bar to simulate regex filtering -->
+    <ion-toolbar>
+      <ion-searchbar placeholder="Search logs"></ion-searchbar>
+    </ion-toolbar>
+  
+    <!-- Info text for regex functionality -->
+
+  
+  <!-- Table Container for Logs -->
+  <div class="table-container" *ngIf="activeSegment == 'all'">
+    <ion-toolbar>
+      <ion-searchbar search-icon="/assets/filter.png" [(ngModel)]="inputFilter" placeholder="Regex filters">
+       
+      </ion-searchbar>
+    </ion-toolbar>
+    <div class="filter-info">
+      <p>Use regular expressions to filter log entries (e.g., <code>error|warning</code> to show logs containing "error" or "warning").</p>
+    </div>
+   
+
+    <!-- Log history (simulated data) -->
+    <div class="log-list">
+      <div class="log-item" *ngFor="let log of logs">
+        <div class="log-info">
+          <h5>{{ log.message }}</h5>
+          <p>{{ log.resultCount }} results</p>
+        </div>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Closed Events Table -->
+  <div class="table-container" *ngIf="activeSegment == 'errors'"> 
+    <ion-toolbar>
+      <ion-searchbar placeholder="Search closed events"></ion-searchbar>
+    </ion-toolbar>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Severity</th>
+                <th>Start Time</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> </td>
+                <td>
+                  <div> </div>
+                </td>
+                <td> </td>
+                <td>/td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
 </div>

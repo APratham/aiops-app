@@ -11,3 +11,243 @@
  height: 530px; /* Fill the parent container */
  margin-bottom: 0px;
 }
+
+.table-container {
+ display: block;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ height: calc(100vh - 96px);
+ width: calc(100vw - 20px);
+ background-color: rgba(255, 255, 255, 0.95); 
+ border-radius: 10px;
+ padding: 20px;
+ box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); 
+ transition: box-shadow 0.3s ease;
+ max-width: 100%;
+ max-height: 100%;
+ color: #000000;
+}
+
+/* Table properties */
+table {
+ width: 100%;
+ border-collapse: collapse;
+ border: 1px solid #c0c0c0; /* Adjust color as needed */
+ border-radius: 8px;
+ overflow: hidden; color: #000000; 
+}
+
+/* Row and cell properties */
+th, td {
+ padding: 12px;
+ text-align: left;
+ border-bottom: 2px solid #c0c0c0;
+ border-top: 2px solid #c0c0c0;
+}
+
+/* Header row style */
+thead {
+ border-bottom: 2px solid #c0c0c0; 
+}
+
+th {
+ border-bottom: 2px solid #c0c0c0;
+}
+
+
+
+tr:first-child th:first-child {
+ border-top-left-radius: 8px; 
+}
+
+tr:first-child th:last-child {
+ border-top-right-radius: 8px; 
+}
+
+tr:last-child td:first-child {
+ border-bottom-left-radius: 8px; 
+}
+
+tr:last-child td:last-child {
+ border-bottom-right-radius: 8px; 
+}
+
+th:first-child, td:first-child {
+ border-left: 2px solid #c0c0c0;
+}
+
+th:last-child, td:last-child {
+ border-right: 2px solid #c0c0c0;
+}
+
+button {
+ background-color: transparent !important;
+ color: #9d9b9b !important;
+ font-weight: bold;
+}
+
+ion-header {
+ border-bottom: 1px solid #ccc;
+}
+
+ion-toolbar {
+ width: 100%;  // Ensure toolbar takes full width of its container
+}
+
+ion-segment {
+ --indicator-color: var(--ion-color-primary);
+ --color-checked: var(--ion-color-primary);
+}
+
+ion-searchbar {
+ --background: #e8e3e3;
+ --placeholder-color: #3d3d3d;
+ margin-bottom: 20px;  // Ensure there's space between search bar and table
+ padding: 20px;
+}
+
+.incidents-container {
+ padding: 20px;
+ overflow: auto; // Adding scroll if needed without affecting the table
+}
+
+.table-container {
+ margin-top: 20px; // Ensuring space between search bar and table
+ border: 1px solid #ccc;
+ box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+ border-radius: 8px;
+ overflow: hidden;
+}
+
+/* Ensure existing table styles do not change */
+table {
+ width: 100%;
+ border-collapse: collapse;
+}
+
+th, td {
+ padding: 12px;
+ text-align: left;
+}
+
+table {
+ width: 100%;
+ margin-top: 0px;  // Remove margin-top if it's not needed
+ border-collapse: collapse;
+ th, td {
+   padding: 12px;
+   border-bottom: 2px solid #c0c0c0;
+ }
+ thead th {
+   border-bottom: 2px solid #c0c0c0;
+ }
+}
+
+ion-select {
+ --icon-color: #000000;
+}
+
+.events-container ion-select {
+ --highlight-color: #000000; // Set to your preferred color, example here is blue
+}
+
+ion-select::part(placeholder),
+ion-select::part(text) {
+  color: #000; // Ensures the text color is set correctly
+}
+
+ion-select::part(icon) {
+  color: #000; // Ensures the dropdown arrow icon color is overridden
+}
+
+ion-select::part(underline) {
+ border-color: #4285F4; // This assumes there's a part named 'underline', which may not exist
+}
+
+.logs-container {
+ padding: 16px;
+}
+
+.log-list {
+ display: flex;
+ flex-direction: column;
+ width: 100%;
+}
+
+.log-item {
+ display: flex;
+ align-items: center;
+ padding: 16px;
+ border-bottom: 1px solid #ccc;
+ transition: background-color 0.3s ease;
+}
+
+.log-item:hover {
+ background-color: #f9f9f9;
+}
+
+.log-info {
+ flex-grow: 1;
+ padding-left: 16px;
+}
+
+.log-info h5 {
+ margin: 0;
+ font-size: 16px;
+ font-weight: bold;
+}
+
+.log-info p {
+ margin: 4px 0 0;
+ font-size: 14px;
+ color: #999;
+}
+
+ion-icon {
+ font-size: 24px;
+}
+
+.filter-info {
+ padding: 16px;
+ background-color: #f0f0f0;
+ border-radius: 8px;
+ margin-top: 10px;
+ font-size: 14px;
+ color: #666;
+ margin: 0 20 0 20;
+}
+
+.filter-info p {
+ margin: 0;
+}
+
+.filter-info code {
+ background-color: #e8e8e8;
+ padding: 2px 4px;
+ border-radius: 4px;
+ font-size: 14px;
+}
+
+ion-searchbar ion-icon {
+ font-size: 20px;  /* Adjust the icon size */
+ color: #666;      /* Set the icon color */
+ margin-left: 8px; /* Adjust the spacing */
+}
+
+ion-searchbar::part(icon) {
+ display: none !important; /* Hides the search icon */
+ --search-icon-display: none !important; /* Hide the search icon */
+ --icon-color: transparent !important; /* Make the default search icon transparent */
+}
+
+/* Style for the custom filter icon */
+.custom-filter-icon {
+ font-size: 24px;
+ color: #666;
+ margin-left: 8px;
+}
+
+.ion-searchbar search-icon {
+ background-image: url("/src/assets/filter.png");
+}
