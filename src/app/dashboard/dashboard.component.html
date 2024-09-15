@@ -70,7 +70,7 @@
         </div>
         
       </div>
-      
+
       <ng-template #dynamicLoad></ng-template>
       <div *ngIf="currentTab === 'overview'">
       <!-- Include content for Overview tab -->
@@ -187,6 +187,17 @@
                         (ionChange)="toggleSideContainer()"></ion-toggle>
           </ion-item>
         </div>
+
+        <!-- Notification Banner -->
+        <div class="notification-banner" [class.show]="showBanner">
+          <p>The server is going down!</p>
+          <p>Our algorithms detected some problems with your server. <br> Would you like to create an event to investigate this?</p>
+          <div class="notification-buttons">
+            <button ion-button color="primary" (click)="handleAccept()">Create Event</button>
+            <button ion-button color="danger" (click)="handleReject()">Don't Create Event</button>
+          </div>
+        </div>
+
 
 
   </ion-content>

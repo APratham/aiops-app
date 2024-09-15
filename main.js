@@ -50,7 +50,7 @@
  * ----------------------------------------------------------
 */
 
-const { app, BrowserWindow, ipcMain, protocol, dialog } = require('electron');
+const { app, BrowserWindow, Notification, ipcMain, protocol, dialog } = require('electron');
 const { OAuth2Client } = require('google-auth-library');
 const { GOOGLE_OAUTH_CLIENT, MICROSOFT_OAUTH_CLIENT } = require('./secrets');
 const msal = require('@azure/msal-node');
@@ -349,8 +349,14 @@ app.on('ready', async () => {
     splashWindow.close();
   }, 5000); // Show splash screen for 5 seconds
 
+
+
   ipcManager();
 });
+
+function showNotification (title, body) {
+  new Notification({ title: title, body: body }).show();
+}
 
 async function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -397,6 +403,9 @@ async function createMainWindow() {
 
     if (googleTokens || msTokens) {
       console.log('Tokens found, loading main page...');
+
+      showNotification('App Ready', 'Your Electron app is now ready!');
+      
       mainWindow.loadURL(`${BASE_URL}/home`);
       mainWindow.webContents.once('did-finish-load', async () => {
         // Handle tokens if they exist

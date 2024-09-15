@@ -50,6 +50,7 @@ export class DashboardComponent implements OnInit {
   currentTab = 'overview';
   activeMenuItem: string = 'overview';
   isDragging: boolean = false;
+  showBanner: boolean = false;
 
   viewInitialized: boolean = false;  // Add this line to define the property
 
@@ -218,6 +219,18 @@ export class DashboardComponent implements OnInit {
     console.log('Drag ended:', item);
   }
 
+  handleAccept(): void {
+    this.showBanner = false;
+    console.log('Notification Accepted');
+    // Add any additional logic for accept action here
+  }
+
+  handleReject(): void {
+    this.showBanner = false;
+    console.log('Notification Rejected');
+    // Add any additional logic for reject action here
+  }
+
   updateContainerCard(data: any): void {
     this.pageContainerItems1[0].content = `Object ID: ${data.id} <br> Name: ${data.name} <br> Type: ${data.type} <img  src="../assets/docker-logo.png">`;
     this.pageContainerItems1[1].content = `<h3>Downtime</h3>
@@ -348,5 +361,18 @@ export class DashboardComponent implements OnInit {
       { size: 'large-square', isDragging: false, disabled: false, color: '#68163f' }, 
       { size: 'rectangle', isDragging: false, disabled: false, color: '#f6b5c9' }  
     );
+
+    setTimeout(() => {
+      this.showBanner = true;
+
+      // Trigger shake animation after the banner appears
+      setTimeout(() => {
+        const banner = document.querySelector('.notification-banner') as HTMLElement;
+        if (banner) {
+          banner.classList.add('shake');
+          setTimeout(() => banner.classList.remove('shake'), 500); // Remove the shake class after animation completes
+        }
+      }, 100); // Add a slight delay to trigger the shake after visibility
+    }, 60000); // 60000 ms = 1 minute
   }
 }

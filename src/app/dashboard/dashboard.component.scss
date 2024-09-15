@@ -588,9 +588,96 @@ div .incident-card .incident-change {
       fill: black; // Change SVG color if applicable
     }
   }
+  .notification-banner {
+    position: fixed;
+    bottom: 150px;  // 50px from the bottom
+    right: 50px;   // 20px from the right
+    background-color: #323232;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    opacity: 0;               // Hide it initially
+    visibility: hidden;   
+    filter: blur(10px);      // Hide it initially
+    transform: translateY(100%);
+    transition: transform 2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10000;
+  }
+  
+  .notification-banner.show {
+    visibility: visible;  
+    transform: translateX(0);
+    animation: fadeInBlur 2s ease-in-out forwards;
+  }
+  
+  .notification-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button[color="primary"] {
+    background-color: #3880ff;
+    color: white;
+  }
+  
+  button[color="danger"] {
+    background-color: #f04141;
+    color: white;
+  }
+  
+  .notification-banner.shake {
+    animation: shake 0.5s ease-in-out;  /* Shake for 0.5 seconds */
+  }
+
+    /* Add shake animation to the notification */
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
   
 
-
-
-  
+    /* Define the keyframes for opacity and blur transition */
+    @keyframes fadeInBlur {
+    0% {
+      opacity: 0;
+      filter: blur(10px);
+    }
+    10% {
+      opacity: 0.1;
+      filter: blur(9px);
+    }
+    20% {
+      opacity: 0.2;
+      filter: blur(8px);
+    }
+    30% {
+      opacity: 0.3;
+      filter: blur(7px);
+    }
+    70% {
+      opacity: 0.7;
+      filter: blur(3px);
+    }
+    90% {
+      opacity: 0.9;
+      filter: blur(1px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0px);
+    }
+  }
   
