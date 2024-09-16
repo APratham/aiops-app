@@ -373,6 +373,6 @@ export class DashboardComponent implements OnInit {
           setTimeout(() => banner.classList.remove('shake'), 500); // Remove the shake class after animation completes
         }
       }, 100); // Add a slight delay to trigger the shake after visibility
-    }, 60000); // 60000 ms = 1 minute
+    }, 90000); // 60000 ms = 1 minute
   }
 }

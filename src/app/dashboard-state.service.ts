@@ -13,7 +13,7 @@ export class DashboardStateService {
     // Listen to router events and check if the current URL is 'dashboard'
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        const isDashboard = this.router.url.includes('dashboard');
+        const isDashboard = this.router.url.includes('dashboard') || this.router.url.includes('incidents') || this.router.url.includes('settings');
         this.isDashboardSubject.next(isDashboard);
       }
     });
